@@ -53,3 +53,5 @@ export const Colors = {
     tabIconSelected: frostBlue,
   },
 };
+
+export type ColorName = keyof typeof Colors.light & keyof typeof Colors.dark;
