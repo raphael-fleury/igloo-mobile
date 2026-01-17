@@ -2,7 +2,7 @@ import { Text } from "@/components/atoms/text";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { View } from "react-native";
 
-export default function Index() {
+export default function HomeScreen() {
   return (
     <View
       style={{
@@ -12,7 +12,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text variant="title" colorName="tint">Edit app/index.tsx to edit this screen.</Text>
+      <Text variant="title" colorName="tint">Home Screen</Text>
     </View>
   );
 }
