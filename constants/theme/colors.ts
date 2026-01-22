@@ -19,6 +19,7 @@ export const Colors = {
     /* Brand / Actions */
     tint: iceBlue,
     accent: arcticCyan,
+    muted: glacierGray,
 
     /* UI */
     icon: '#6B859C',
@@ -42,6 +43,7 @@ export const Colors = {
     /* Brand / Actions */
     tint: frostBlue,
     accent: arcticCyan,
+    muted: glacierGray,
 
     /* UI */
     icon: '#9FB4C8',

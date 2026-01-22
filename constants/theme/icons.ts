@@ -5,3 +5,5 @@ export const IconSize = {
   lg: 32,
   xl: 40
 }
+
+export type IconVariant = 'default' | 'accent' | 'muted';
