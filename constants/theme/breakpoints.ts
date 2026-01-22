@@ -5,3 +5,5 @@ export const Breakpoints = {
   lg: 1024,  // Large tablets / web
   xl: 1280,  // Desktop
 };
+
+export type Breakpoint = keyof typeof Breakpoints;
