@@ -2,7 +2,7 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 
 import { HapticTab } from '@/components/atoms/haptic-tab';
-import { IconSymbol } from '@/components/atoms/icon-symbol';
+import { Icon } from '@/components/atoms/icon';
 import { Breakpoints, Spacing, Typography } from '@/constants/theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { useWindowDimensions } from 'react-native';
@@ -38,14 +38,14 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ focused }) => <IconSymbol size="lg" name="house.fill" colorName={focused ? "tabIconSelected" : "tabIconDefault"} />
+          tabBarIcon: ({ focused }) => <Icon size="sm" name="home" colorName={focused ? "tabIconSelected" : "tabIconDefault"} />
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',
-          tabBarIcon: ({ focused }) => <IconSymbol size="lg" name="magnifyingglass" colorName={focused ? "tabIconSelected" : "tabIconDefault"} />
+          tabBarIcon: ({ focused }) => <Icon size="sm" name="search" colorName={focused ? "tabIconSelected" : "tabIconDefault"} />
         }}
       />
     </Tabs>
