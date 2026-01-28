@@ -5,10 +5,10 @@ import { Feather } from '@expo/vector-icons';
 import { ComponentProps } from 'react';
 import { StyleProp, TextStyle } from 'react-native';
 
-type FeatherIconName = ComponentProps<typeof Feather>['name'];
+export type IconName = ComponentProps<typeof Feather>['name'];
 
 type Props = {
-    name: FeatherIconName;
+    name: IconName;
     size: keyof typeof IconSize;
     colorName: ColorName;
     style?: StyleProp<TextStyle>;

@@ -2,7 +2,7 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 
 import { HapticTab } from '@/components/atoms/haptic-tab';
-import { Icon } from '@/components/atoms/icon';
+import { Icon, IconName } from '@/components/atoms/icon';
 import { Breakpoints, Spacing, Typography } from '@/constants/theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { useWindowDimensions } from 'react-native';
@@ -38,16 +38,24 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ focused }) => <Icon size="sm" name="home" colorName={focused ? "tabIconSelected" : "tabIconDefault"} />
+          tabBarIcon: getIcon('home')
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',
-          tabBarIcon: ({ focused }) => <Icon size="sm" name="search" colorName={focused ? "tabIconSelected" : "tabIconDefault"} />
+          tabBarIcon: getIcon('search')
         }}
       />
     </Tabs>
   );
+}
+
+type IconProps = Readonly<{ focused: boolean }>;
+
+function getIcon(iconName: IconName) {
+  return ({ focused }: IconProps) => (
+    <Icon size="sm" name={iconName} colorName={focused ? "tabIconSelected" : "tabIconDefault"} />
+  )
 }
