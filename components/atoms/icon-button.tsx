@@ -9,13 +9,12 @@ import { Icon } from './icon';
 
 type FeatherIconName = ComponentProps<typeof Feather>['name'];
 
-type Props = {
+type Props = Omit<ComponentProps<typeof Pressable>, 'disabled' | 'style' | 'accessibilityRole'> & {
   name: FeatherIconName;
   variant: IconVariant;
   size?: keyof typeof IconSize;
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
-  props?: Omit<ComponentProps<typeof Pressable>, 'disabled' | 'style' | 'accessibilityRole'>;
 };
 
 export function IconButton({
@@ -24,7 +23,7 @@ export function IconButton({
   variant = 'default',
   disabled = false,
   style,
-  props
+  ...props
 }: Readonly<Props>) {
   const [colorName, backgroundColorName] = getColors(variant);
   const backgroundColor = useThemeColor(backgroundColorName);
