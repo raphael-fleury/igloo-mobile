@@ -1,4 +1,5 @@
 import { IconSize, IconVariant, Spacing } from '@/constants/theme';
+import { ColorName } from "@/constants/theme/colors";
 import { Feather } from '@expo/vector-icons';
 import { ComponentProps } from 'react';
 import { Pressable, PressableStateCallbackType, StyleProp, ViewStyle } from 'react-native';
@@ -20,28 +21,22 @@ type Props = {
 export function IconButton({
   name,
   size = 'md',
-  variant,
+  variant = 'default',
   disabled = false,
   style,
   props
 }: Readonly<Props>) {
-  const colorName = variant === 'default' ? 'icon' : variant;
-  const backgroundColor = useThemeColor(colorName);
-
-  const getOpacity = ({ pressed, hovered }: PressableStateCallbackType) => {
-    if (pressed) return 0.1;
-    if (hovered) return 0.05;
-    return 0;
-  }
+  const [colorName, backgroundColorName] = getColors(variant);
+  const backgroundColor = useThemeColor(backgroundColorName);
 
   return (
     <Pressable
       disabled={disabled}
       accessibilityRole="button"
-      style={({ pressed, hovered }) => [
+      style={(state) => [
         {
           padding: Spacing[size] / 2,
-          backgroundColor: backgroundColor + opacityToHex(getOpacity({ pressed, hovered })),
+          backgroundColor: backgroundColor + opacityToHex(getBgOpacity(state)),
           borderRadius: (IconSize[size] + Spacing[size]) / 2,
           alignItems: 'center',
           justifyContent: 'center'
@@ -60,4 +55,18 @@ function opacityToHex(opacity: number): string {
   const clamped = Math.min(1, Math.max(0, opacity));
   const hex = Math.round(clamped * 255).toString(16);
   return hex.padStart(2, '0').toUpperCase();
+}
+
+function getColors(variant: IconVariant) {
+  return {
+    default: ['icon', 'icon'],
+    muted: ['muted', 'muted'],
+    accent: ['accent', 'accent'],
+  }[variant] as [ColorName, ColorName];
+}
+
+function getBgOpacity(state: PressableStateCallbackType) {
+  if (state.pressed) return 0.25;
+  if (state.hovered) return 0.15;
+  return 0;
 }
