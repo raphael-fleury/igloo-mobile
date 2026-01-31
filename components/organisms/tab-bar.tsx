@@ -1,6 +1,7 @@
 import { IconName } from '@/components/atoms/icon';
 import { IconButton } from '@/components/atoms/icon-button';
 import { Text } from '@/components/atoms/text';
+import { Nav } from '@/components/containers/nav';
 import { Breakpoints, Spacing, Typography } from '@/constants/theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import React, { useState } from 'react';
@@ -9,8 +10,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  useWindowDimensions,
-  View
+  useWindowDimensions
 } from 'react-native';
 
 type TabItem = {
@@ -62,17 +62,15 @@ type HorizontalTabBarProps = {
 function HorizontalTabBar({ tabs, activeTab, onTabPress }: Readonly<HorizontalTabBarProps>) {
   const [menuVisible, setMenuVisible] = useState(false);
 
-  const backgroundColor = useThemeColor('background');
   const activeTabColor = useThemeColor('tabIconSelected');
   const inactiveTabColor = useThemeColor('tabIconDefault');
-  const borderColor = useThemeColor('border');
 
   const regularTabs = tabs.filter(tab => !['configuration', 'logout'].includes(tab.name));
   const settingsTabs = tabs.filter(tab => ['configuration', 'logout'].includes(tab.name));
 
   return (
     <>
-      <View style={[styles.horizontalContainer, { backgroundColor, borderTopColor: borderColor }]}>
+      <Nav horizontal>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -104,7 +102,7 @@ function HorizontalTabBar({ tabs, activeTab, onTabPress }: Readonly<HorizontalTa
             />
           </Pressable>
         </ScrollView>
-      </View>
+      </Nav>
 
       <SettingsMenu
         visible={menuVisible}
@@ -132,13 +130,11 @@ type VerticalTabBarProps = {
 };
 
 function VerticalTabBar({ tabs, activeTab, onTabPress, isLargeScreen }: Readonly<VerticalTabBarProps>) {
-  const backgroundColor = useThemeColor('background');
   const activeTabColor = useThemeColor('tabIconSelected');
   const inactiveTabColor = useThemeColor('tabIconDefault');
-  const borderColor = useThemeColor('border');
 
   return (
-    <View style={[styles.verticalContainer, { backgroundColor, borderColor }]}>
+    <Nav>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
@@ -177,7 +173,7 @@ function VerticalTabBar({ tabs, activeTab, onTabPress, isLargeScreen }: Readonly
           }}
         />
       )}
-    </View>
+    </Nav>
   );
 }
 
@@ -351,10 +347,6 @@ function SettingsMenu({
 
 const styles = StyleSheet.create({
   // Horizontal Layout
-  horizontalContainer: {
-    paddingHorizontal: Spacing.sm,
-    borderTopWidth: 1
-  },
   horizontalContent: {
     width: '100%',
     flexDirection: 'row',
@@ -373,12 +365,6 @@ const styles = StyleSheet.create({
   },
 
   // Vertical Layout
-  verticalContainer: {
-    paddingVertical: Spacing.sm,
-    justifyContent: 'space-between',
-    borderRightWidth: 1,
-    width: 'auto',
-  },
   verticalContent: {
     paddingHorizontal: Spacing.xs
   },
