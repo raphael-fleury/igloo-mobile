@@ -1,61 +1,88 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
-
-import { HapticTab } from '@/components/atoms/haptic-tab';
-import { Icon, IconName } from '@/components/atoms/icon';
-import { Breakpoints, Spacing, Typography } from '@/constants/theme';
-import { useThemeColor } from '@/hooks/use-theme-color';
+import React, { useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 
-export default function TabLayout() {
-  const backgroundColor = useThemeColor('background');
-  const activeTabColor = useThemeColor("tabIconSelected");
+import { IconName } from '@/components/atoms/icon';
+import { CustomTabBar } from '@/components/organisms/tab-bar';
+import { Breakpoints } from '@/constants/theme';
 
+export default function TabLayout() {
   const { width } = useWindowDimensions();
   const isMediumScreen = width >= Breakpoints.md;
-  const isLargeScreen = width >= Breakpoints.lg;
+  const [activeTab, setActiveTab] = useState('index');
+
+  const tabItems = [
+    { name: 'index', title: 'Home', icon: 'home' as IconName },
+    { name: 'explore', title: 'Explore', icon: 'search' as IconName },
+    { name: 'profile', title: 'Profile', icon: 'user' as IconName },
+    { name: 'configuration', title: 'Configuration', icon: 'settings' as IconName },
+    { name: 'logout', title: 'Logout', icon: 'log-out' as IconName, onPress: handleLogout },
+  ];
+
+  function handleLogout() {
+    console.log('logout');
+  }
 
   return (
     <Tabs
+      tabBar={
+        (props) => (
+          <CustomTabBar
+            tabs={tabItems}
+            activeTab={activeTab}
+            onTabPress={(tabName) => {
+              setActiveTab(tabName);
+              const tab = tabItems.find(t => t.name === tabName);
+              if (tab?.onPress) {
+                tab.onPress();
+              } else {
+                props.navigation.navigate(tabName);
+              }
+            }}
+          />
+        )
+      }
       screenOptions={{
-        tabBarActiveTintColor: activeTabColor,
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarPosition: isMediumScreen ? 'left' : 'bottom',
-        tabBarStyle: [
-          { backgroundColor },
-          isMediumScreen && { minWidth: 0 }
-        ],
-        tabBarItemStyle: [
-          { padding: Spacing.xs }
-        ],
-        tabBarLabelStyle: [
-          Typography.body,
-          !isLargeScreen && { display: 'none' }
-        ]
-      }}>
+        tabBarPosition: isMediumScreen ? 'left' : 'bottom'
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: getIcon('home')
+        }}
+        listeners={{
+          tabPress: () => setActiveTab('index'),
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',
-          tabBarIcon: getIcon('search')
+        }}
+        listeners={{
+          tabPress: () => setActiveTab('explore'),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+        }}
+        listeners={{
+          tabPress: () => setActiveTab('profile'),
+        }}
+      />
+      <Tabs.Screen
+        name="configuration"
+        options={{
+          title: 'Configuration',
+        }}
+        listeners={{
+          tabPress: () => setActiveTab('configuration'),
         }}
       />
     </Tabs>
   );
-}
-
-type IconProps = Readonly<{ focused: boolean }>;
-
-function getIcon(iconName: IconName) {
-  return ({ focused }: IconProps) => (
-    <Icon size="sm" name={iconName} colorName={focused ? "tabIconSelected" : "tabIconDefault"} />
-  )
 }
