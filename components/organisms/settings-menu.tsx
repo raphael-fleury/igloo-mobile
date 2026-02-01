@@ -1,8 +1,7 @@
-import { Spacing, Typography } from "@/constants/theme";
+import { Spacing } from "@/constants/theme";
 import { useThemeColor } from "@/hooks/use-theme-color";
-import { Modal, Pressable, StyleSheet, TextStyle } from "react-native";
-import { Text } from "../atoms/text";
-import { IconButton } from "../molecules/icon-button";
+import { Modal, Pressable, StyleSheet } from "react-native";
+import { TextButton } from "../molecules/text-button";
 import { TabItem } from "./tab-bar";
 
 type SettingsMenuProps = {
@@ -39,56 +38,19 @@ export function SettingsMenu({
           onPress={(e) => e.stopPropagation()}
         >
           {tabs.map((tab) => (
-            <SettingsMenuItem
-              key={tab.page}
-              tab={tab}
-              isActive={activeTab === tab.page}
+            <TextButton
+              key={tab.title}
+              text={tab.title}
+              icon={tab.icon}
+              variant={activeTab === tab.page ? 'accent' : 'default'}
+              textVariant="body"
               onPress={() => onTabPress(tab.page)}
+              buttonStyle={styles.menuItem}
             />
           ))}
         </Pressable>
       </Pressable>
     </Modal>
-  );
-}
-
-type SettingsMenuItemProps = {
-  tab: TabItem;
-  isActive: boolean;
-  onPress: () => void;
-};
-
-function SettingsMenuItem({
-  tab,
-  isActive,
-  onPress,
-}: Readonly<SettingsMenuItemProps>) {
-  const activeColor = useThemeColor('tabIconSelected');
-  const inactiveColor = useThemeColor('tabIconDefault');
-
-  return (
-    <Pressable
-      onPress={onPress}
-      style={[
-        styles.menuItem,
-        isActive && { backgroundColor: `${activeColor}20` }
-      ]}
-    >
-      <IconButton
-        name={tab.icon}
-        variant={isActive ? 'accent' : 'default'}
-        size="md"
-      />
-      <Text
-        style={[
-          Typography.body as TextStyle,
-          styles.menuItemText,
-          { color: isActive ? activeColor : inactiveColor }
-        ]}
-      >
-        {tab.title}
-      </Text>
-    </Pressable>
   );
 }
 
@@ -107,15 +69,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
   },
   menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.sm,
-    borderRadius: Spacing.sm,
     marginBottom: Spacing.sm,
     gap: Spacing.md,
-  },
-  menuItemText: {
-    flex: 1,
-  },
+  }
 });
