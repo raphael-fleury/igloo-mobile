@@ -12,7 +12,7 @@ export default function ConfigurationScreen() {
         alignItems: "center",
       }}
     >
-      <Text variant="title" colorName="tint">Configuration</Text>
+      <Text variant="title" colorName="accent">Configuration</Text>
     </View>
   );
 }

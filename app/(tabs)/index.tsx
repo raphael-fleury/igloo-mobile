@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/use-theme-color";
 import { View } from "react-native";
 
 export default function HomeScreen() {
+  console.log(process.env)
   return (
     <View
       style={{
@@ -12,7 +13,7 @@ export default function HomeScreen() {
         alignItems: "center",
       }}
     >
-      <Text variant="title" colorName="tint">Home Screen</Text>
+      <Text variant="title" colorName="accent">Title</Text>
     </View>
   );
 }

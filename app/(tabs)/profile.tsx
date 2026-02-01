@@ -12,7 +12,7 @@ export default function ProfileScreen() {
         alignItems: "center",
       }}
     >
-      <Text variant="title" colorName="tint">Profile</Text>
+      <Text variant="title" colorName="accent">Profile</Text>
     </View>
   );
 }

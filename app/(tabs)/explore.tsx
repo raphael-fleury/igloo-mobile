@@ -12,7 +12,7 @@ export default function ExploreScreen() {
         alignItems: "center",
       }}
     >
-      <Text variant="title" colorName="tint">Explore</Text>
+      <Text variant="title" colorName="accent">Explore</Text>
     </View>
   );
 }
