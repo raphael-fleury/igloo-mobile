@@ -1,16 +1,13 @@
 import { IconName } from '@/components/atoms/icon';
-import { Text } from '@/components/atoms/text';
 import { Nav } from '@/components/containers/nav';
 import { IconButton } from '@/components/molecules/icon-button';
+import { TextButton } from '@/components/molecules/text-button';
 import { SettingsMenu } from '@/components/organisms/settings-menu';
-import { Breakpoints, Spacing, Typography } from '@/constants/theme';
-import { useThemeColor } from '@/hooks/use-theme-color';
+import { Breakpoints, Spacing } from '@/constants/theme';
 import React, { useState } from 'react';
 import {
-  Pressable,
   ScrollView,
   StyleSheet,
-  TextStyle,
   useWindowDimensions
 } from 'react-native';
 
@@ -107,38 +104,23 @@ type TabButtonProps = {
   onPress: () => void;
 };
 
-function TabButton({
-  tab,
-  isActive,
-  isLarge,
-  onPress,
-}: Readonly<TabButtonProps>) {
-  const activeTabColor = useThemeColor('tabIconSelected');
-  const inactiveTabColor = useThemeColor('tabIconDefault');
-
-  return (
-    <Pressable
+function TabButton({ tab, isActive, isLarge, onPress }: Readonly<TabButtonProps>) {
+  return isLarge ? (
+    <TextButton
+      icon={tab.icon}
+      text={tab.title}
+      variant={isActive ? 'accent' : 'default'}
+      textVariant='body'
+      buttonStyle={{ padding: Spacing.md / 2 }}
       onPress={onPress}
-      style={styles.tabButton}
-    >
-      <IconButton
-        name={tab.icon}
-        variant={isActive ? 'accent' : 'default'}
-        size="md"
-        onPress={onPress}
-      />
-      {isLarge && (
-        <Text
-          style={[
-            Typography.body as TextStyle,
-            styles.tabLabel,
-            { color: isActive ? activeTabColor : inactiveTabColor }
-          ]}
-        >
-          {tab.title}
-        </Text>
-      )}
-    </Pressable>
+    />
+  ) : (
+    <IconButton
+      name={tab.icon}
+      variant={isActive ? 'accent' : 'default'}
+      size="md"
+      onPress={onPress}
+    />
   );
 }
 
@@ -152,15 +134,5 @@ const styles = StyleSheet.create({
   },
   verticalContent: {
     gap: Spacing.xs
-  },
-
-  tabButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.sm,
-  },
-  tabLabel: {
-    flexShrink: 1,
-    marginRight: Spacing.md,
   }
 });
