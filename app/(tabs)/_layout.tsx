@@ -81,12 +81,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="configuration"
+        name="configurations"
         options={{
-          title: 'Configuration',
+          title: 'Configurations',
         }}
         listeners={{
-          tabPress: () => setActiveTab('configuration'),
+          tabPress: () => setActiveTab('configurations'),
         }}
       />
     </Tabs>
