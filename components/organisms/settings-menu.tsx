@@ -1,6 +1,6 @@
 import { Spacing, Typography } from "@/constants/theme";
 import { useThemeColor } from "@/hooks/use-theme-color";
-import { Modal, Pressable, StyleSheet } from "react-native";
+import { Modal, Pressable, StyleSheet, TextStyle } from "react-native";
 import { Text } from "../atoms/text";
 import { IconButton } from "../molecules/icon-button";
 import { TabItem } from "./tab-bar";
@@ -81,7 +81,7 @@ function SettingsMenuItem({
       />
       <Text
         style={[
-          Typography.body,
+          Typography.body as TextStyle,
           styles.menuItemText,
           { color: isActive ? activeColor : inactiveColor }
         ]}

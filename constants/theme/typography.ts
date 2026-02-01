@@ -1,7 +1,6 @@
-import { TextStyle } from "react-native";
 import { Fonts } from "./fonts";
 
-export const Typography: Record<string, Partial<TextStyle>> = {
+export const Typography = {
   title: {
     fontFamily: Fonts.sans,
     fontSize: 24,
@@ -26,6 +25,6 @@ export const Typography: Record<string, Partial<TextStyle>> = {
     lineHeight: 16,
     fontWeight: 400,
   }
-}
+};
 
 export type TextVariant = keyof typeof Typography;

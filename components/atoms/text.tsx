@@ -1,10 +1,11 @@
 import { Typography } from '@/constants/theme';
 import { ColorName } from '@/constants/theme/colors';
+import { TextVariant } from '@/constants/theme/typography';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { Text as RNText, TextProps } from 'react-native';
+import { Text as RNText, TextProps, TextStyle } from 'react-native';
 
 interface Props extends TextProps {
-  variant?: keyof typeof Typography;
+  variant?: TextVariant;
   colorName?: ColorName;
 }
 
@@ -20,7 +21,7 @@ export function Text({
     <RNText
       {...props}
       style={[
-        Typography[variant],
+        Typography[variant] as TextStyle,
         { color },
         style,
       ]}

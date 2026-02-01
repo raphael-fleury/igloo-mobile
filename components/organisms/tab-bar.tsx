@@ -10,6 +10,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  TextStyle,
   useWindowDimensions
 } from 'react-native';
 
@@ -129,7 +130,7 @@ function TabButton({
       {isLarge && (
         <Text
           style={[
-            Typography.body,
+            Typography.body as TextStyle,
             styles.tabLabel,
             { color: isActive ? activeTabColor : inactiveTabColor }
           ]}
