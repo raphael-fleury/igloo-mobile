@@ -77,12 +77,10 @@ function HorizontalTabBar({ tabs, activeTab, onTabPress }: Readonly<HorizontalTa
           contentContainerStyle={styles.horizontalContent}
         >
           {regularTabs.map((tab) => (
-            <HorizontalTabButton
-              key={tab.name}
-              tab={tab}
-              isActive={activeTab === tab.name}
-              activeColor={activeTabColor}
-              inactiveColor={inactiveTabColor}
+            <IconButton
+              name={tab.icon}
+              variant={activeTab === tab.name ? 'accent' : 'default'}
+              size="md"
               onPress={() => {
                 onTabPress?.(tab.name);
                 tab.onPress?.();
@@ -90,17 +88,12 @@ function HorizontalTabBar({ tabs, activeTab, onTabPress }: Readonly<HorizontalTa
             />
           ))}
 
-          <Pressable
+          <IconButton
+            name="menu"
+            variant="default"
+            size="md"
             onPress={() => setMenuVisible(true)}
-            style={[styles.horizontalTabButton]}
-          >
-            <IconButton
-              name="menu"
-              variant="default"
-              size="md"
-              onPress={() => setMenuVisible(true)}
-            />
-          </Pressable>
+          />
         </ScrollView>
       </Nav>
 
@@ -185,30 +178,6 @@ type TabButtonProps = {
   onPress: () => void;
 };
 
-function HorizontalTabButton({
-  tab,
-  isActive,
-  activeColor,
-  inactiveColor,
-  onPress,
-}: Readonly<TabButtonProps>) {
-  return (
-    <Pressable
-      onPress={onPress}
-      style={[
-        styles.horizontalTabButton,
-        isActive && [styles.horizontalTabButtonActive, { borderBottomColor: activeColor }]
-      ]}
-    >
-      <IconButton
-        name={tab.icon}
-        variant={isActive ? 'accent' : 'default'}
-        size="md"
-        onPress={onPress}
-      />
-    </Pressable>
-  );
-}
 
 type VerticalTabButtonProps = TabButtonProps & {
   isLarge: boolean;
@@ -225,10 +194,7 @@ function VerticalTabButton({
   return (
     <Pressable
       onPress={onPress}
-      style={[
-        styles.verticalTabButton,
-        isActive && [styles.verticalTabButtonActive, { borderLeftColor: activeColor }]
-      ]}
+      style={styles.verticalTabButton}
     >
       <IconButton
         name={tab.icon}
@@ -354,31 +320,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: Spacing.xs,
   },
-  horizontalTabButton: {
-    paddingVertical: Spacing.xs,
-    paddingHorizontal: Spacing.xs,
-    borderBottomWidth: 3,
-    borderBottomColor: 'transparent',
-  },
-  horizontalTabButtonActive: {
-    borderBottomWidth: 3,
-  },
 
   // Vertical Layout
   verticalContent: {
-    paddingHorizontal: Spacing.xs
+    gap: Spacing.xs
   },
   verticalTabButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: Spacing.xs,
-    paddingHorizontal: Spacing.xs,
-    borderLeftWidth: 3,
-    borderLeftColor: 'transparent',
     gap: Spacing.sm,
-  },
-  verticalTabButtonActive: {
-    borderLeftWidth: 3,
   },
   tabLabel: {
     flexShrink: 1,

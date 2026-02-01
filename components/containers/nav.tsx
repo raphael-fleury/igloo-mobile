@@ -13,6 +13,7 @@ export function Nav({ horizontal = false, children }: NavProps) {
 
   return (
     <View style={[
+      styles.container,
       horizontal ? styles.horizontalContainer : styles.verticalContainer,
       { backgroundColor, borderColor }
     ]}>
@@ -22,14 +23,15 @@ export function Nav({ horizontal = false, children }: NavProps) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    padding: Spacing.sm
+  },
   horizontalContainer: {
     width: '100%',
-    paddingHorizontal: Spacing.sm,
     borderTopWidth: 1
   },
   verticalContainer: {
     width: 'auto',
-    paddingVertical: Spacing.sm,
     borderRightWidth: 1
   }
 });
