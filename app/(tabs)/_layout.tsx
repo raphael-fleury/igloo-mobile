@@ -8,8 +8,9 @@ import { Breakpoints } from '@/constants/theme';
 
 export default function TabLayout() {
   const { width } = useWindowDimensions();
-  const isMediumScreen = width >= Breakpoints.md;
   const [activeTab, setActiveTab] = useState('index');
+  
+  const isMediumScreen = width >= Breakpoints.md;
 
   const primaryTabs = [
     { page: 'index', title: 'Home', icon: 'home' as IconName },
