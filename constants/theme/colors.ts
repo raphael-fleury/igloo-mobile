@@ -1,10 +1,10 @@
 // Brand Colors
-const iceBlue = '#4DA3FF';      // Azul glacial (primário)
-const frostBlue = '#A8D8FF';    // Azul claro / gelo
-const arcticCyan = '#6FE7FF';   // Ciano gelado (accent)
-const midnightBlue = '#0E1A24'; // Noite ártica
-const polarWhite = '#F8FBFF';   // Branco neve
-const glacierGray = '#C7D0D9';  // Cinza frio
+const iceBlue = '#4DA3FF';
+const frostBlue = '#A8D8FF';
+const arcticCyan = '#6FE7FF';
+const midnightBlue = '#0E1A24';
+const polarWhite = '#F8FBFF';
+const glacierGray = '#C7D0D9';
 
 export const Colors = {
   light: {
@@ -13,9 +13,9 @@ export const Colors = {
     surface: '#FFFFFF',
 
     /* Brand / Actions */
-    default: '#6B859C',
-    accent: arcticCyan,
-    muted: glacierGray,
+    default: midnightBlue,
+    accent: iceBlue,
+    muted: '#9FB4C8',
 
     /* UI */
     border: '#E1E8EF',
@@ -28,9 +28,9 @@ export const Colors = {
     surface: '#162634',
 
     /* Brand / Actions */
-    default: '#9FB4C8',
+    default: glacierGray,
     accent: arcticCyan,
-    muted: glacierGray,
+    muted: '#9FB4C8',
 
     /* UI */
     border: '#223646',
