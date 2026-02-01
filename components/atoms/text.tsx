@@ -11,7 +11,7 @@ interface Props extends TextProps {
 
 export function Text({
   variant = 'body',
-  colorName = 'text',
+  colorName = 'default',
   style,
   ...props
 }: Readonly<Props>) {

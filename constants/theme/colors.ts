@@ -8,51 +8,33 @@ const glacierGray = '#C7D0D9';  // Cinza frio
 
 export const Colors = {
   light: {
-    /* Text */
-    text: '#0B1F33',
-    textSecondary: '#4A647A',
-
     /* Backgrounds */
     background: polarWhite,
     surface: '#FFFFFF',
 
     /* Brand / Actions */
-    tint: iceBlue,
+    default: '#6B859C',
     accent: arcticCyan,
     muted: glacierGray,
 
     /* UI */
-    icon: '#6B859C',
     border: '#E1E8EF',
-    divider: '#EDF2F7',
-
-    /* Tabs */
-    tabIconDefault: '#6B859C',
-    tabIconSelected: iceBlue,
+    divider: '#EDF2F7'
   },
 
   dark: {
-    /* Text */
-    text: '#EAF4FF',
-    textSecondary: '#AFC4D6',
-
     /* Backgrounds */
     background: midnightBlue,
     surface: '#162634',
 
     /* Brand / Actions */
-    tint: frostBlue,
+    default: '#9FB4C8',
     accent: arcticCyan,
     muted: glacierGray,
 
     /* UI */
-    icon: '#9FB4C8',
     border: '#223646',
-    divider: '#1B2E3D',
-
-    /* Tabs */
-    tabIconDefault: '#9FB4C8',
-    tabIconSelected: frostBlue,
+    divider: '#1B2E3D'
   },
 };
 

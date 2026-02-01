@@ -79,14 +79,15 @@ Telas completas do app.
 Use sempre tokens semânticos em vez de cores diretas:
 
 **Exemplos**
-- `text`
-- `textSecondary`
-- `surface`
+- `default`
+- `muted`
 - `accent`
+- `surface`
+- `background`
 - `border`
 
 ```tsx
-<Text color="text" />
+<Text color="default" />
 ```
 
 ---

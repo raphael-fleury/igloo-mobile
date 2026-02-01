@@ -1,5 +1,4 @@
 import { ButtonVariant, IconSize, Spacing } from "@/constants/theme";
-import { ColorName } from "@/constants/theme/colors";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { ComponentProps } from "react";
 import { Pressable, PressableStateCallbackType, StyleProp, ViewStyle } from "react-native";
@@ -12,7 +11,7 @@ export type ButtonProps = Omit<ComponentProps<typeof Pressable>, 'disabled' | 's
 };
 
 export function Button({ variant, size, disabled, style, ...props }: Readonly<ButtonProps>) {
-  const backgroundColor = useThemeColor(getBgColor(variant));
+  const backgroundColor = useThemeColor(variant);
   
   return (
     <Pressable
@@ -46,12 +45,4 @@ function getBgOpacity(state: PressableStateCallbackType) {
   if (state.pressed) return 0.25;
   if (state.hovered) return 0.15;
   return 0;
-}
-
-function getBgColor(variant: ButtonVariant) {
-  return {
-    default: 'icon',
-    muted: 'muted',
-    accent: 'accent',
-  }[variant] as ColorName;
 }

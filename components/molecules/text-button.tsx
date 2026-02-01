@@ -1,5 +1,4 @@
 import { ButtonVariant, IconSize } from "@/constants/theme";
-import { ColorName } from "@/constants/theme/colors";
 import { TextVariant } from "@/constants/theme/typography";
 import { ComponentProps } from "react";
 import { Pressable, StyleProp, TextStyle, ViewStyle } from "react-native";
@@ -22,7 +21,7 @@ type ButtonProps = Omit<ComponentProps<typeof Pressable>, 'disabled' | 'style' |
 export function TextButton({
   variant, textVariant, icon, text, disabled, buttonStyle, iconStyle, textStyle, ...props
 }: Readonly<ButtonProps>) {
-  const colorName = getColor(variant);
+  const colorName = variant;
   const size = getSize(textVariant);
   const buttonProps = { variant, size, disabled, style: buttonStyle, ...props };
 
@@ -54,12 +53,4 @@ function getSize(textVariant: TextVariant) {
     caption: 'sm',
     label: 'sm'
   }[textVariant] as keyof typeof IconSize;
-}
-
-function getColor(variant: ButtonVariant) {
-  return {
-    default: 'icon',
-    muted: 'muted',
-    accent: 'accent',
-  }[variant] as ColorName;
 }

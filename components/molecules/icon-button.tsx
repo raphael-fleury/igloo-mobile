@@ -1,5 +1,4 @@
 import { IconSize, IconVariant, Spacing } from '@/constants/theme';
-import { ColorName } from "@/constants/theme/colors";
 import { Feather } from '@expo/vector-icons';
 import { ComponentProps } from 'react';
 import { StyleProp, TextStyle, ViewStyle } from 'react-native';
@@ -27,8 +26,6 @@ export function IconButton({
   iconStyle,
   ...props
 }: Readonly<Props>) {
-  const colorName = getColor(variant);
-
   return (
     <Button
       variant={variant}
@@ -41,15 +38,7 @@ export function IconButton({
       }, buttonStyle]}
       {...props}
     >
-      <Icon name={name} size={size} colorName={colorName} style={iconStyle} />
+      <Icon name={name} size={size} colorName={variant} style={iconStyle} />
     </Button>
   );
-}
-
-function getColor(variant: IconVariant) {
-  return {
-    default: 'icon',
-    muted: 'muted',
-    accent: 'accent',
-  }[variant] as ColorName;
 }
