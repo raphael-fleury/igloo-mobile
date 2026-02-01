@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
   },
   horizontalContainer: {
     width: '100%',
-    borderTopWidth: 1
+    borderTopWidth: 1,
+    flexDirection: 'row'
   },
   verticalContainer: {
     width: 'auto',

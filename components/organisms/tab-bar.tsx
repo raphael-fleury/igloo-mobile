@@ -28,173 +28,99 @@ type TabBarProps = {
 
 export function CustomTabBar({ tabs, activeTab, onTabPress }: Readonly<TabBarProps>) {
   const { width } = useWindowDimensions();
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const isMediumScreen = width >= Breakpoints.md;
   const isLargeScreen = width >= Breakpoints.lg;
   const isHorizontal = !isMediumScreen;
 
-  if (isHorizontal) {
-    return (
-      <HorizontalTabBar
-        tabs={tabs}
-        activeTab={activeTab}
-        onTabPress={onTabPress}
-      />
-    );
-  }
-
-  return (
-    <VerticalTabBar
-      tabs={tabs}
-      activeTab={activeTab}
-      onTabPress={onTabPress}
-      isLargeScreen={isLargeScreen}
-    />
-  );
-}
-
-type HorizontalTabBarProps = {
-  tabs: TabItem[];
-  activeTab?: string;
-  onTabPress?: (tabName: string) => void;
-};
-
-function HorizontalTabBar({ tabs, activeTab, onTabPress }: Readonly<HorizontalTabBarProps>) {
-  const [menuVisible, setMenuVisible] = useState(false);
-
-  const activeTabColor = useThemeColor('tabIconSelected');
-  const inactiveTabColor = useThemeColor('tabIconDefault');
-
   const regularTabs = tabs.filter(tab => !['configuration', 'logout'].includes(tab.name));
   const settingsTabs = tabs.filter(tab => ['configuration', 'logout'].includes(tab.name));
 
   return (
-    <>
-      <Nav horizontal>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.horizontalContent}
-        >
-          {regularTabs.map((tab) => (
-            <IconButton
-              name={tab.icon}
-              variant={activeTab === tab.name ? 'accent' : 'default'}
-              size="md"
-              onPress={() => {
-                onTabPress?.(tab.name);
-                tab.onPress?.();
-              }}
-            />
-          ))}
-
-          <IconButton
-            name="menu"
-            variant="default"
-            size="md"
-            onPress={() => setMenuVisible(true)}
-          />
-        </ScrollView>
-      </Nav>
-
-      <SettingsMenu
-        visible={menuVisible}
-        onClose={() => setMenuVisible(false)}
-        tabs={settingsTabs}
-        activeTab={activeTab}
-        activeColor={activeTabColor}
-        inactiveColor={inactiveTabColor}
-        onTabPress={(tabName) => {
-          onTabPress?.(tabName);
-          setMenuVisible(false);
-          const tab = settingsTabs.find(t => t.name === tabName);
-          tab?.onPress?.();
-        }}
-      />
-    </>
-  );
-}
-
-type VerticalTabBarProps = {
-  tabs: TabItem[];
-  activeTab?: string;
-  onTabPress?: (tabName: string) => void;
-  isLargeScreen: boolean;
-};
-
-function VerticalTabBar({ tabs, activeTab, onTabPress, isLargeScreen }: Readonly<VerticalTabBarProps>) {
-  const activeTabColor = useThemeColor('tabIconSelected');
-  const inactiveTabColor = useThemeColor('tabIconDefault');
-
-  return (
-    <Nav>
+    <Nav horizontal={isHorizontal}>
       <ScrollView
+        horizontal={isHorizontal}
+        showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={[
-          styles.verticalContent,
-          isLargeScreen && { paddingRight: Spacing.lg }
-        ]}
+        contentContainerStyle={
+          isHorizontal ? styles.horizontalContent : styles.verticalContent
+        }
       >
-        {tabs.filter(tab => tab.name !== 'logout').map((tab) => (
-          <VerticalTabButton
+        {regularTabs.map((tab) => (
+          <TabButton
             key={tab.name}
             tab={tab}
             isActive={activeTab === tab.name}
             isLarge={isLargeScreen}
-            activeColor={activeTabColor}
-            inactiveColor={inactiveTabColor}
             onPress={() => {
               onTabPress?.(tab.name);
               tab.onPress?.();
             }}
           />
         ))}
+
+        {isHorizontal && (
+          <IconButton
+            name="menu"
+            variant="default"
+            size="md"
+            onPress={() => setMenuVisible(true)}
+          />
+        )}
       </ScrollView>
 
-      {/* Logout button at bottom */}
-      {tabs.find(tab => tab.name === 'logout') && (
-        <VerticalTabButton
-          tab={tabs.find(tab => tab.name === 'logout')!}
-          isActive={activeTab === 'logout'}
+      {!isHorizontal && settingsTabs.map((tab) => (
+        <TabButton
+          key={tab.name}
+          tab={tab}
+          isActive={activeTab === tab.name}
           isLarge={isLargeScreen}
-          activeColor={activeTabColor}
-          inactiveColor={inactiveTabColor}
           onPress={() => {
-            const logoutTab = tabs.find(tab => tab.name === 'logout');
-            onTabPress?.('logout');
-            logoutTab?.onPress?.();
+            onTabPress?.(tab.name);
+            tab.onPress?.();
+          }}
+        />
+      ))}
+
+      {isHorizontal && (
+        <SettingsMenu
+          visible={menuVisible}
+          onClose={() => setMenuVisible(false)}
+          tabs={settingsTabs}
+          activeTab={activeTab}
+          onTabPress={(tabName) => {
+            onTabPress?.(tabName);
+            setMenuVisible(false);
+            const tab = settingsTabs.find(t => t.name === tabName);
+            tab?.onPress?.();
           }}
         />
       )}
     </Nav>
-  );
+  )
 }
 
 type TabButtonProps = {
   tab: TabItem;
   isActive: boolean;
-  activeColor: string;
-  inactiveColor: string;
   onPress: () => void;
-};
-
-
-type VerticalTabButtonProps = TabButtonProps & {
   isLarge: boolean;
 };
 
-function VerticalTabButton({
+function TabButton({
   tab,
   isActive,
   isLarge,
-  activeColor,
-  inactiveColor,
   onPress,
-}: Readonly<VerticalTabButtonProps>) {
+}: Readonly<TabButtonProps>) {
+  const activeTabColor = useThemeColor('tabIconSelected');
+  const inactiveTabColor = useThemeColor('tabIconDefault');
+
   return (
     <Pressable
       onPress={onPress}
-      style={styles.verticalTabButton}
+      style={styles.tabButton}
     >
       <IconButton
         name={tab.icon}
@@ -207,7 +133,7 @@ function VerticalTabButton({
           style={[
             Typography.body,
             styles.tabLabel,
-            { color: isActive ? activeColor : inactiveColor }
+            { color: isActive ? activeTabColor : inactiveTabColor }
           ]}
         >
           {tab.title}
@@ -263,8 +189,6 @@ type SettingsMenuProps = {
   onClose: () => void;
   tabs: TabItem[];
   activeTab?: string;
-  activeColor: string;
-  inactiveColor: string;
   onTabPress: (tabName: string) => void;
 };
 
@@ -273,10 +197,11 @@ function SettingsMenu({
   onClose,
   tabs,
   activeTab,
-  activeColor,
-  inactiveColor,
   onTabPress,
 }: Readonly<SettingsMenuProps>) {
+  const activeTabColor = useThemeColor('tabIconSelected');
+  const inactiveTabColor = useThemeColor('tabIconDefault');
+
   const backgroundColor = useThemeColor('background');
   const borderColor = useThemeColor('border');
 
@@ -300,8 +225,8 @@ function SettingsMenu({
               key={tab.name}
               tab={tab}
               isActive={activeTab === tab.name}
-              activeColor={activeColor}
-              inactiveColor={inactiveColor}
+              activeColor={activeTabColor}
+              inactiveColor={inactiveTabColor}
               onPress={() => onTabPress(tab.name)}
             />
           ))}
@@ -312,7 +237,6 @@ function SettingsMenu({
 }
 
 const styles = StyleSheet.create({
-  // Horizontal Layout
   horizontalContent: {
     width: '100%',
     flexDirection: 'row',
@@ -320,29 +244,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: Spacing.xs,
   },
-
-  // Vertical Layout
   verticalContent: {
     gap: Spacing.xs
   },
-  verticalTabButton: {
+
+  tabButton: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.sm,
   },
   tabLabel: {
     flexShrink: 1,
+    marginRight: Spacing.md,
   },
 
-  // Modal Menu
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'flex-end',
   },
   menuContent: {
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    borderTopLeftRadius: Spacing.md,
+    borderTopRightRadius: Spacing.md,
     paddingTop: Spacing.md,
     paddingHorizontal: Spacing.md,
     paddingBottom: Spacing.lg,
@@ -353,7 +276,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.sm,
-    borderRadius: 8,
+    borderRadius: Spacing.sm,
     marginBottom: Spacing.sm,
     gap: Spacing.md,
   },
