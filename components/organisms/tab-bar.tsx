@@ -13,29 +13,27 @@ import {
   useWindowDimensions
 } from 'react-native';
 
-type TabItem = {
-  name: string;
+export type TabItem = {
+  page?: string;
   title: string;
   icon: IconName;
   onPress?: () => void;
 };
 
 type TabBarProps = {
-  tabs: TabItem[];
+  primaryTabs: TabItem[];
+  secondaryTabs: TabItem[];
   activeTab?: string;
-  onTabPress?: (tabName: string) => void;
+  onTabPress: (tabName?: string) => void;
 };
 
-export function CustomTabBar({ tabs, activeTab, onTabPress }: Readonly<TabBarProps>) {
+export function CustomTabBar({ primaryTabs, secondaryTabs, activeTab, onTabPress }: Readonly<TabBarProps>) {
   const { width } = useWindowDimensions();
   const [menuVisible, setMenuVisible] = useState(false);
 
   const isMediumScreen = width >= Breakpoints.md;
   const isLargeScreen = width >= Breakpoints.lg;
   const isHorizontal = !isMediumScreen;
-
-  const regularTabs = tabs.filter(tab => !['configuration', 'logout'].includes(tab.name));
-  const settingsTabs = tabs.filter(tab => ['configuration', 'logout'].includes(tab.name));
 
   return (
     <Nav horizontal={isHorizontal}>
@@ -47,14 +45,14 @@ export function CustomTabBar({ tabs, activeTab, onTabPress }: Readonly<TabBarPro
           isHorizontal ? styles.horizontalContent : styles.verticalContent
         }
       >
-        {regularTabs.map((tab) => (
+        {primaryTabs.map((tab) => (
           <TabButton
-            key={tab.name}
+            key={tab.page}
             tab={tab}
-            isActive={activeTab === tab.name}
+            isActive={activeTab === tab.page}
             isLarge={isLargeScreen}
             onPress={() => {
-              onTabPress?.(tab.name);
+              onTabPress(tab.page);
               tab.onPress?.();
             }}
           />
@@ -70,14 +68,14 @@ export function CustomTabBar({ tabs, activeTab, onTabPress }: Readonly<TabBarPro
         )}
       </ScrollView>
 
-      {!isHorizontal && settingsTabs.map((tab) => (
+      {!isHorizontal && secondaryTabs.map((tab) => (
         <TabButton
-          key={tab.name}
+          key={tab.page}
           tab={tab}
-          isActive={activeTab === tab.name}
+          isActive={activeTab === tab.page}
           isLarge={isLargeScreen}
           onPress={() => {
-            onTabPress?.(tab.name);
+            onTabPress(tab.page);
             tab.onPress?.();
           }}
         />
@@ -87,12 +85,12 @@ export function CustomTabBar({ tabs, activeTab, onTabPress }: Readonly<TabBarPro
         <SettingsMenu
           visible={menuVisible}
           onClose={() => setMenuVisible(false)}
-          tabs={settingsTabs}
+          tabs={secondaryTabs}
           activeTab={activeTab}
-          onTabPress={(tabName) => {
-            onTabPress?.(tabName);
+          onTabPress={(page) => {
+            onTabPress(page);
             setMenuVisible(false);
-            const tab = settingsTabs.find(t => t.name === tabName);
+            const tab = secondaryTabs.find(t => t.page === page);
             tab?.onPress?.();
           }}
         />
@@ -104,8 +102,8 @@ export function CustomTabBar({ tabs, activeTab, onTabPress }: Readonly<TabBarPro
 type TabButtonProps = {
   tab: TabItem;
   isActive: boolean;
-  onPress: () => void;
   isLarge: boolean;
+  onPress: () => void;
 };
 
 function TabButton({
@@ -146,18 +144,17 @@ function TabButton({
 type SettingsMenuItemProps = {
   tab: TabItem;
   isActive: boolean;
-  activeColor: string;
-  inactiveColor: string;
   onPress: () => void;
 };
 
 function SettingsMenuItem({
   tab,
   isActive,
-  activeColor,
-  inactiveColor,
   onPress,
 }: Readonly<SettingsMenuItemProps>) {
+  const activeColor = useThemeColor('tabIconSelected');
+  const inactiveColor = useThemeColor('tabIconDefault');
+
   return (
     <Pressable
       onPress={onPress}
@@ -189,7 +186,7 @@ type SettingsMenuProps = {
   onClose: () => void;
   tabs: TabItem[];
   activeTab?: string;
-  onTabPress: (tabName: string) => void;
+  onTabPress: (page?: string) => void;
 };
 
 function SettingsMenu({
@@ -199,9 +196,6 @@ function SettingsMenu({
   activeTab,
   onTabPress,
 }: Readonly<SettingsMenuProps>) {
-  const activeTabColor = useThemeColor('tabIconSelected');
-  const inactiveTabColor = useThemeColor('tabIconDefault');
-
   const backgroundColor = useThemeColor('background');
   const borderColor = useThemeColor('border');
 
@@ -222,12 +216,10 @@ function SettingsMenu({
         >
           {tabs.map((tab) => (
             <SettingsMenuItem
-              key={tab.name}
+              key={tab.page}
               tab={tab}
-              isActive={activeTab === tab.name}
-              activeColor={activeTabColor}
-              inactiveColor={inactiveTabColor}
-              onPress={() => onTabPress(tab.name)}
+              isActive={activeTab === tab.page}
+              onPress={() => onTabPress(tab.page)}
             />
           ))}
         </Pressable>
