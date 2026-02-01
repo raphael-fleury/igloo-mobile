@@ -35,7 +35,6 @@ export function IconButton({
       size={size}
       disabled={disabled}
       style={[{
-        padding: Spacing[size] / 2,
         borderRadius: (IconSize[size] + Spacing[size]) / 2,
         alignItems: 'center',
         justifyContent: 'center'

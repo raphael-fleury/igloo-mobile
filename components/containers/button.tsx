@@ -23,9 +23,9 @@ export function Button({ variant, size, disabled, style, ...props }: Readonly<Bu
           flexDirection: 'row',
           alignItems: 'center',
           backgroundColor: backgroundColor + opacityToHex(getBgOpacity(state)),
-          borderRadius: Spacing[size],
-          padding: Spacing[size],
-          gap: Spacing[size],
+          borderRadius: Spacing[size] / 2,
+          padding: Spacing[size] / 2,
+          gap: Spacing[size] / 2,
         },
         disabled && { opacity: 0.5 },
         style
