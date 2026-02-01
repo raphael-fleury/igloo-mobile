@@ -19,7 +19,7 @@ export default function TabLayout() {
   ] as TabItem[];
 
   const secondaryTabs = [
-    { page: 'configuration', title: 'Configuration', icon: 'settings' as IconName },
+    { page: 'configurations', title: 'Configurations', icon: 'settings' as IconName },
     { title: 'Logout', icon: 'log-out' as IconName, onPress: handleLogout },
   ] as TabItem[];
 
