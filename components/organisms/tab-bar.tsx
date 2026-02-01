@@ -1,7 +1,7 @@
 import { IconName } from '@/components/atoms/icon';
-import { IconButton } from '@/components/atoms/icon-button';
 import { Text } from '@/components/atoms/text';
 import { Nav } from '@/components/containers/nav';
+import { IconButton } from '@/components/molecules/icon-button';
 import { SettingsMenu } from '@/components/organisms/settings-menu';
 import { Breakpoints, Spacing, Typography } from '@/constants/theme';
 import { useThemeColor } from '@/hooks/use-theme-color';

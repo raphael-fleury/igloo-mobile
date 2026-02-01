@@ -1,8 +1,8 @@
 import { Spacing, Typography } from "@/constants/theme";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { Modal, Pressable, StyleSheet } from "react-native";
-import { IconButton } from "../atoms/icon-button";
 import { Text } from "../atoms/text";
+import { IconButton } from "../molecules/icon-button";
 import { TabItem } from "./tab-bar";
 
 type SettingsMenuProps = {
