@@ -98,7 +98,6 @@ export function RightSidebar({ sections }: Readonly<RightSidebarProps>) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: 240,
     paddingVertical: Spacing.md,
     borderLeftWidth: 1,
   },
