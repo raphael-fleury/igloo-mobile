@@ -3,9 +3,9 @@ import { Spacing } from '@/constants/theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import React from 'react';
 import {
-    StyleSheet,
-    TextInput,
-    View
+  StyleSheet,
+  TextInput,
+  View
 } from 'react-native';
 import { IconButton } from './icon-button';
 

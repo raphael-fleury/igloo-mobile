@@ -111,7 +111,7 @@ function TabButton({ tab, isActive, isLarge, onPress }: Readonly<TabButtonProps>
       text={tab.title}
       variant={isActive ? 'accent' : 'default'}
       textVariant='body'
-      buttonStyle={{ padding: Spacing.md / 2 }}
+      buttonStyle={{ padding: Spacing.md / 2, gap: Spacing.md }}
       onPress={onPress}
     />
   ) : (
