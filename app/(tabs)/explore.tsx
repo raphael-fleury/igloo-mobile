@@ -9,11 +9,20 @@ export default function ExploreScreen() {
       style={{
         backgroundColor: useThemeColor('background'),
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text variant="title" colorName="accent">Explore</Text>
+        }}
+      >
+        <SearchBar
+          placeholder="Search..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          onFilterPress={handleFilterPress}
+        />
+        <Tabs
+          tabs={EXPLORE_TABS}
+          activeTabId={activeTab}
+          onTabPress={setActiveTab}
+        />
+        <View style={{ flex: 1 }} />
     </View>
     </PageLayout>
   );
