@@ -3,9 +3,9 @@ import { Spacing } from '@/constants/theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import React from 'react';
 import {
-    ScrollView,
-    StyleSheet,
-    View,
+  ScrollView,
+  StyleSheet,
+  View,
 } from 'react-native';
 
 export type SidebarSectionItem = {

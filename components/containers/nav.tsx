@@ -4,10 +4,11 @@ import { StyleSheet, View } from "react-native";
 
 type NavProps = {
   horizontal?: boolean,
-  children: React.ReactNode
+  children: React.ReactNode,
+  style?: object
 }
 
-export function Nav({ horizontal = false, children }: NavProps) {
+export function Nav({ horizontal = false, children, style }: NavProps) {
   const backgroundColor = useThemeColor('background');
   const borderColor = useThemeColor('border');
 
@@ -15,7 +16,8 @@ export function Nav({ horizontal = false, children }: NavProps) {
     <View style={[
       styles.container,
       horizontal ? styles.horizontalContainer : styles.verticalContainer,
-      { backgroundColor, borderColor }
+      { backgroundColor, borderColor },
+      style
     ]}>
       {children}
     </View>

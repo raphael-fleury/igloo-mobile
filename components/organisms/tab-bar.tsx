@@ -34,7 +34,7 @@ export function CustomTabBar({ primaryTabs, secondaryTabs, activeTab, onTabPress
   const isHorizontal = !isMediumScreen;
 
   return (
-    <Nav horizontal={isHorizontal}>
+    <Nav horizontal={isHorizontal} style={[isLargeScreen && { width: width / 4 }]}>
       <ScrollView
         horizontal={isHorizontal}
         showsHorizontalScrollIndicator={false}
