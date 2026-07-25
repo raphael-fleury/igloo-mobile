@@ -21,6 +21,10 @@ export default function ExploreScreen() {
           tabs={EXPLORE_TABS}
           activeTabId={activeTab}
           onTabPress={setActiveTab}
+          style={{
+            paddingHorizontal: Spacing.md,
+            gap: Spacing.md,
+          }}
         />
         <View style={{ flex: 1 }} />
     </View>

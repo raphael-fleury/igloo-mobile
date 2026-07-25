@@ -3,10 +3,12 @@ import { Spacing } from '@/constants/theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import React from 'react';
 import {
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    View,
+  Pressable,
+  ScrollView,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
 } from 'react-native';
 
 export type TabItem = {
@@ -18,19 +20,21 @@ type TabsProps = {
   tabs: TabItem[];
   activeTabId: string;
   onTabPress: (tabId: string) => void;
+  style?: StyleProp<ViewStyle>;
 };
 
 export function Tabs({
   tabs,
   activeTabId,
   onTabPress,
+  style,
 }: Readonly<TabsProps>) {
   const accentColor = useThemeColor('accent');
   const defaultColor = useThemeColor('default');
   const borderColor = useThemeColor('divider');
 
   return (
-    <View style={[styles.container, { borderBottomColor: borderColor }]}>
+    <View style={[styles.container, { borderBottomColor: borderColor }, style]}>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}

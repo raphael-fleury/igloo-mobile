@@ -1,11 +1,11 @@
 import { Spacing } from "@/constants/theme";
 import { useThemeColor } from "@/hooks/use-theme-color";
-import { StyleSheet, View } from "react-native";
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 
 type NavProps = {
   horizontal?: boolean,
   children: React.ReactNode,
-  style?: object
+  style?: StyleProp<ViewStyle>;
 }
 
 export function Nav({ horizontal = false, children, style }: NavProps) {
