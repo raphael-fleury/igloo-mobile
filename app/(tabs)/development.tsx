@@ -1,11 +1,13 @@
 import { Text } from "@/components/atoms/text";
 import { IconButton } from "@/components/molecules/icon-button";
 import { TextButton } from "@/components/molecules/text-button";
+import { PageLayout } from "@/components/organisms/page-layout";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { View } from "react-native";
 
 export default function DevelopmentScreen() {
   return (
+    <PageLayout rightSidebarSections={[]}>
     <View
       style={{
         backgroundColor: useThemeColor('background'),
@@ -34,5 +36,6 @@ export default function DevelopmentScreen() {
         <IconButton name="home" size="xl" variant="muted" />
       </View>
     </View>
+    </PageLayout>
   );
 }

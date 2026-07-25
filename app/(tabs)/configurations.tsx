@@ -1,9 +1,11 @@
 import { Text } from "@/components/atoms/text";
+import { PageLayout } from "@/components/organisms/page-layout";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { View } from "react-native";
 
 export default function ConfigurationScreen() {
   return (
+    <PageLayout rightSidebarSections={[]}>
     <View
       style={{
         backgroundColor: useThemeColor('background'),
@@ -14,5 +16,6 @@ export default function ConfigurationScreen() {
     >
       <Text variant="title" colorName="accent">Configuration</Text>
     </View>
+    </PageLayout>
   );
 }
