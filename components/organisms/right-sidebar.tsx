@@ -1,7 +1,9 @@
 import { Text } from '@/components/atoms/text';
+import { SearchInput } from '@/components/molecules/search-input';
 import { Spacing } from '@/constants/theme';
+import { useActiveTab } from '@/contexts/active-tab';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -75,12 +77,24 @@ type RightSidebarProps = {
 export function RightSidebar({ sections }: Readonly<RightSidebarProps>) {
   const backgroundColor = useThemeColor('background');
   const borderColor = useThemeColor('border');
+  const activeTab = useActiveTab();
+  const [searchQuery, setSearchQuery] = useState('');
+  const showSearchBar = activeTab !== 'explore';
 
   return (
     <ScrollView
       style={[styles.container, { backgroundColor, borderColor }]}
       showsVerticalScrollIndicator={false}
     >
+      {showSearchBar && (
+        <View style={styles.searchBarWrapper}>
+          <SearchInput
+            placeholder="Search..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        </View>
+      )}
       <View style={styles.content}>
         {sections.map((section, index) => (
           <SidebarSection
@@ -100,6 +114,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: Spacing.md,
     borderLeftWidth: 1,
+  },
+  searchBarWrapper: {
+    paddingHorizontal: Spacing.md,
+    paddingBottom: Spacing.md,
   },
   content: {
     paddingHorizontal: Spacing.md,

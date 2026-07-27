@@ -6,6 +6,7 @@ import { IconName } from '@/components/atoms/icon';
 import { CustomTabBar, TabItem } from '@/components/organisms/tab-bar';
 import { env } from '@/constants/env';
 import { Breakpoints } from '@/constants/theme';
+import { ActiveTabProvider } from '@/contexts/active-tab';
 
 export default function TabLayout() {
   const { width } = useWindowDimensions();
@@ -29,31 +30,32 @@ export default function TabLayout() {
   }
 
   return (
-    <Tabs
-      tabBar={
-        (props) => (
-          <CustomTabBar
-            primaryTabs={primaryTabs}
-            secondaryTabs={secondaryTabs}
-            activeTab={activeTab}
-            onTabPress={(page) => {
-              const tab = secondaryTabs.find(t => t.page === page) || primaryTabs.find(t => t.page === page);
-              if (tab?.onPress) {
-                tab.onPress();
-              }
-              if (page) {
-                props.navigation.navigate(page);
-                setActiveTab(page);
-              }
-            }}
-          />
-        )
-      }
-      screenOptions={{
-        headerShown: false,
-        tabBarPosition: isMediumScreen ? 'left' : 'bottom'
-      }}
-    >
+    <ActiveTabProvider activeTab={activeTab}>
+      <Tabs
+        tabBar={
+          (props) => (
+            <CustomTabBar
+              primaryTabs={primaryTabs}
+              secondaryTabs={secondaryTabs}
+              activeTab={activeTab}
+              onTabPress={(page) => {
+                const tab = secondaryTabs.find(t => t.page === page) || primaryTabs.find(t => t.page === page);
+                if (tab?.onPress) {
+                  tab.onPress();
+                }
+                if (page) {
+                  props.navigation.navigate(page);
+                  setActiveTab(page);
+                }
+              }}
+            />
+          )
+        }
+        screenOptions={{
+          headerShown: false,
+          tabBarPosition: isMediumScreen ? 'left' : 'bottom'
+        }}
+      >
       <Tabs.Screen
         name="index"
         options={{
@@ -101,6 +103,7 @@ export default function TabLayout() {
           }}
         />
       )}
-    </Tabs>
+      </Tabs>
+    </ActiveTabProvider>
   );
 }

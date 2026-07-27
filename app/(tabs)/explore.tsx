@@ -1,14 +1,23 @@
 import { PageLayout } from "@/components/organisms/page-layout";
+import { Spacing } from "@/constants/theme";
 import { useThemeColor } from "@/hooks/use-theme-color";
+import { useState } from "react";
 import { View } from "react-native";
 
 export default function ExploreScreen() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('top');
+
+  const handleFilterPress = () => {
+    console.log('Filter button pressed');
+  };
+
   return (
     <PageLayout rightSidebarSections={[]}>
-    <View
-      style={{
-        backgroundColor: useThemeColor('background'),
-        flex: 1,
+      <View
+        style={{
+          backgroundColor: useThemeColor('background'),
+          flex: 1,
         }}
       >
         <SearchBar
@@ -27,7 +36,7 @@ export default function ExploreScreen() {
           }}
         />
         <View style={{ flex: 1 }} />
-    </View>
+      </View>
     </PageLayout>
   );
 }
