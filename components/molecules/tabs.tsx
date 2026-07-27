@@ -21,6 +21,7 @@ type TabsProps = {
   activeTabId: string;
   onTabPress: (tabId: string) => void;
   style?: StyleProp<ViewStyle>;
+  centered?: boolean;
 };
 
 export function Tabs({
@@ -28,6 +29,7 @@ export function Tabs({
   activeTabId,
   onTabPress,
   style,
+  centered = false,
 }: Readonly<TabsProps>) {
   const accentColor = useThemeColor('accent');
   const defaultColor = useThemeColor('default');
@@ -35,36 +37,65 @@ export function Tabs({
 
   return (
     <View style={[styles.container, { borderBottomColor: borderColor }, style]}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        scrollEventThrottle={16}
-      >
-        {tabs.map((tab) => {
-          const isActive = tab.id === activeTabId;
+      {centered ? (
+        <View style={styles.centeredContent}>
+          {tabs.map((tab) => {
+            const isActive = tab.id === activeTabId;
 
-          return (
-            <Pressable
-              key={tab.id}
-              onPress={() => onTabPress(tab.id)}
-              style={[
-                styles.tab,
-                {
-                  borderBottomColor: isActive ? accentColor : 'transparent',
-                },
-              ]}
-            >
-              <Text
-                variant="body"
-                colorName={isActive ? 'accent' : 'muted'}
-                style={{ fontWeight: isActive ? '600' : '400' }}
+            return (
+              <Pressable
+                key={tab.id}
+                onPress={() => onTabPress(tab.id)}
+                style={[
+                  styles.tab,
+                  {
+                    borderBottomColor: isActive ? accentColor : 'transparent',
+                  },
+                ]}
               >
-                {tab.label}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </ScrollView>
+                <Text
+                  variant="body"
+                  colorName={isActive ? 'accent' : 'muted'}
+                  style={{ fontWeight: isActive ? '600' : '400' }}
+                >
+                  {tab.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      ) : (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          scrollEventThrottle={16}
+        >
+          {tabs.map((tab) => {
+            const isActive = tab.id === activeTabId;
+
+            return (
+              <Pressable
+                key={tab.id}
+                onPress={() => onTabPress(tab.id)}
+                style={[
+                  styles.tab,
+                  {
+                    borderBottomColor: isActive ? accentColor : 'transparent',
+                  },
+                ]}
+              >
+                <Text
+                  variant="body"
+                  colorName={isActive ? 'accent' : 'muted'}
+                  style={{ fontWeight: isActive ? '600' : '400' }}
+                >
+                  {tab.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -72,6 +103,11 @@ export function Tabs({
 const styles = StyleSheet.create({
   container: {
     borderBottomWidth: 1,
+  },
+  centeredContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
   tab: {
     paddingHorizontal: Spacing.md,

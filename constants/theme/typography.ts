@@ -13,6 +13,12 @@ export const Typography = {
     lineHeight: 24,
     fontWeight: 400,
   },
+  input: {
+    fontFamily: Fonts.sans,
+    fontSize: 20,
+    lineHeight: 24,
+    fontWeight: 400,
+  },
   caption: {
     fontFamily: Fonts.sans,
     fontSize: 14,
