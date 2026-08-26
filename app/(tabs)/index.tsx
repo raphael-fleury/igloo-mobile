@@ -19,8 +19,27 @@ export default function HomeScreen() {
     setPostContent('');
   };
 
+  const sidebarSections = [
+    {
+      title: 'Profiles to Follow',
+      items: [
+        { id: '1', label: 'John Developer', badge: 1 },
+        { id: '2', label: 'Jane Designer' },
+        { id: '3', label: 'Alex Engineer', badge: 5 },
+      ],
+    },
+    {
+      title: 'Trending Topics',
+      items: [
+        { id: '1', label: '#ReactNative', badge: 234 },
+        { id: '2', label: '#Expo', badge: 89 },
+        { id: '3', label: '#WebDevelopment', badge: 456 },
+      ],
+    },
+  ];
+
   return (
-    <PageLayout rightSidebarSections={[]}>
+    <PageLayout rightSidebarSections={sidebarSections}>
       <View
         style={{
           backgroundColor: useThemeColor('background'),
