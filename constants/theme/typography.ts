@@ -1,3 +1,4 @@
+import { TextStyle } from "react-native";
 import { Fonts } from "./fonts";
 
 export const Typography = {
@@ -5,31 +6,31 @@ export const Typography = {
     fontFamily: Fonts.sans,
     fontSize: 24,
     lineHeight: 32,
-    fontWeight: 600,
+    fontWeight: 600 as TextStyle["fontWeight"],
   },
   body: {
     fontFamily: Fonts.sans,
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: 400,
+    fontWeight: 400 as TextStyle["fontWeight"],
   },
   input: {
     fontFamily: Fonts.sans,
-    fontSize: 20,
+    fontSize: 16,
     lineHeight: 24,
-    fontWeight: 400,
+    fontWeight: 400 as TextStyle["fontWeight"],
   },
   caption: {
     fontFamily: Fonts.sans,
     fontSize: 14,
     lineHeight: 20,
-    fontWeight: 400,
+    fontWeight: 400 as TextStyle["fontWeight"],
   },
   label: {
     fontFamily: Fonts.sans,
     fontSize: 12,
     lineHeight: 16,
-    fontWeight: 400,
+    fontWeight: 400 as TextStyle["fontWeight"],
   }
 };
 

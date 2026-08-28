@@ -7,6 +7,14 @@ const polarWhite = '#F8FBFF';
 const polarBlue = '#0284C7';
 const glacierGray = '#C7D0D9';
 
+// Feedback Colors (cool-toned to blend with the icy palette)
+const glacierMint = '#2DD4BF';
+const glacierMintDark = '#5EEAD4';
+const auroraAmber = '#F2A93B';
+const auroraAmberDark = '#FBBF5C';
+const frostCoral = '#F2555C';
+const frostCoralDark = '#FF6B72';
+
 export const Colors = {
   light: {
     background: polarWhite,
@@ -17,7 +25,11 @@ export const Colors = {
     muted: '#9FB4C8',
 
     border: '#E1E8EF',
-    divider: '#EDF2F7'
+    divider: '#EDF2F7',
+
+    success: glacierMint,
+    warning: auroraAmber,
+    error: frostCoral
   },
 
   dark: {
@@ -29,7 +41,11 @@ export const Colors = {
     muted: '#9FB4C8',
 
     border: '#223646',
-    divider: '#1B2E3D'
+    divider: '#1B2E3D',
+
+    success: glacierMintDark,
+    warning: auroraAmberDark,
+    error: frostCoralDark
   },
 };
 
