@@ -1,1 +1,1 @@
-export type ButtonVariant = 'default' | 'accent' | 'muted';
+export type ButtonVariant = 'default' | 'accent' | 'muted' | 'link';

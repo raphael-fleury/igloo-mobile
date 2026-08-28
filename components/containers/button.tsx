@@ -11,7 +11,8 @@ export type ButtonProps = Omit<ComponentProps<typeof Pressable>, 'disabled' | 's
 };
 
 export function Button({ variant, size, disabled, style, ...props }: Readonly<ButtonProps>) {
-  const backgroundColor = useThemeColor(variant);
+  const color = variant === 'link' ? 'accent' : variant;
+  const backgroundColor = useThemeColor(color);
   
   return (
     <Pressable
@@ -21,7 +22,7 @@ export function Button({ variant, size, disabled, style, ...props }: Readonly<Bu
         { 
           flexDirection: 'row',
           alignItems: 'center',
-          backgroundColor: backgroundColor + opacityToHex(getBgOpacity(state)),
+          backgroundColor: variant === 'link' ? 'transparent' : backgroundColor + opacityToHex(getBgOpacity(state)),
           borderRadius: Spacing[size] / 2,
           padding: Spacing[size] / 2,
           gap: Spacing[size] / 2,

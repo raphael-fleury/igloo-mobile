@@ -21,26 +21,31 @@ type ButtonProps = Omit<ComponentProps<typeof Pressable>, 'disabled' | 'style' |
 export function TextButton({
   variant, textVariant, icon, text, disabled, buttonStyle, iconStyle, textStyle, ...props
 }: Readonly<ButtonProps>) {
-  const colorName = variant;
+  const colorName = variant === 'link' ? 'accent' : variant;
   const size = getSize(textVariant);
   const buttonProps = { variant, size, disabled, style: buttonStyle, ...props };
 
   return (
     <Button {...buttonProps}>
-      {icon && (
-        <Icon name={icon} size={size} colorName={colorName} style={iconStyle} />
-      )}
-      {text && (
-        <Text
-          variant={textVariant}
-          colorName={colorName}
-          style={[
-            { flex: 1, fontWeight: 600 },
-            textStyle
-          ]}
-        >
-          {text}
-        </Text>
+      {(state) => (
+        <>
+          {icon && (
+            <Icon name={icon} size={size} colorName={colorName} style={iconStyle} />
+          )}
+          {text && (
+            <Text
+              variant={textVariant}
+              colorName={colorName}
+              style={[
+                { flex: 1, fontWeight: 600 },
+                variant === 'link' && state.hovered && { textDecorationLine: 'underline' },
+                textStyle
+              ]}
+            >
+              {text}
+            </Text>
+          )}
+        </>
       )}
     </Button>
   );
@@ -48,8 +53,10 @@ export function TextButton({
 
 function getSize(textVariant: TextVariant) {
   return {
+    hero: 'xxl',
     title: 'lg',
     body: 'md',
+    input: 'md',
     caption: 'sm',
     label: 'sm'
   }[textVariant] as keyof typeof IconSize;
