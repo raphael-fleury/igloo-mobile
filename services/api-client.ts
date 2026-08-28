@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 
 // Configurar a URL base da API
@@ -14,9 +15,15 @@ export const apiClient: AxiosInstance = axios.create({
 
 // Interceptor para adicionar token de autenticação
 apiClient.interceptors.request.use(
-  (config) => {
-    // Token será adicionado aqui conforme necessário
-    // Você pode recuperar o token do AsyncStorage ou Context
+  async (config) => {
+    try {
+      const token = await AsyncStorage.getItem('auth_token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (error) {
+      console.error('Error retrieving token from AsyncStorage:', error);
+    }
     return config;
   },
   (error) => {
@@ -30,8 +37,8 @@ apiClient.interceptors.response.use(
   (error: AxiosError) => {
     // Tratamento centralizado de erros
     if (error.response?.status === 401) {
-      // Tratar não autorizado
-      console.log('Não autorizado - fazer logout');
+      // Tratar não autorizado - remover token e fazer logout
+      AsyncStorage.removeItem('auth_token').catch((e) => console.error('Error removing token', e));
     }
     return Promise.reject(error);
   }
