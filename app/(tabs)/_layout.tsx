@@ -67,53 +67,53 @@ export default function TabLayout() {
           tabBarPosition: isMediumScreen ? 'left' : 'bottom'
         }}
       >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-        }}
-        listeners={{
-          tabPress: () => setActiveTab('index'),
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-        }}
-        listeners={{
-          tabPress: () => setActiveTab('explore'),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-        }}
-        listeners={{
-          tabPress: () => setActiveTab('profile'),
-        }}
-      />
-      <Tabs.Screen
-        name="configurations"
-        options={{
-          title: 'Configurations',
-        }}
-        listeners={{
-          tabPress: () => setActiveTab('configurations'),
-        }}
-      />
-      {env.NODE_ENV === 'development' && (
         <Tabs.Screen
-          name="development"
+          name="index"
           options={{
-            title: 'Development',
+            title: 'Home',
           }}
           listeners={{
-            tabPress: () => setActiveTab('development'),
+            tabPress: () => setActiveTab('index'),
           }}
         />
-      )}
+        <Tabs.Screen
+          name="explore"
+          options={{
+            title: 'Explore',
+          }}
+          listeners={{
+            tabPress: () => setActiveTab('explore'),
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: 'Profile',
+          }}
+          listeners={{
+            tabPress: () => setActiveTab('profile'),
+          }}
+        />
+        <Tabs.Screen
+          name="configurations"
+          options={{
+            title: 'Configurations',
+          }}
+          listeners={{
+            tabPress: () => setActiveTab('configurations'),
+          }}
+        />
+        {env.NODE_ENV === 'development' && (
+          <Tabs.Screen
+            name="development"
+            options={{
+              title: 'Development',
+            }}
+            listeners={{
+              tabPress: () => setActiveTab('development'),
+            }}
+          />
+        )}
       </Tabs>
     </ActiveTabProvider>
   );
