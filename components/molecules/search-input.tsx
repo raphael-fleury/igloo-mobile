@@ -1,5 +1,5 @@
 import { Icon } from '@/components/atoms/icon';
-import { Spacing } from '@/constants/theme';
+import { Spacing, Typography } from '@/constants/theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import React from 'react';
 import {
@@ -37,7 +37,7 @@ export function SearchInput({
       <Icon name="search" size="md" colorName="muted" />
       <TextInput
         style={[
-          styles.input,
+          Typography.input,
           {
             color: textColor,
             outline: 'none'
@@ -63,10 +63,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     gap: Spacing.sm,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    fontFamily: 'System',
-  },
+  }
 });
