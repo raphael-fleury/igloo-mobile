@@ -1,17 +1,28 @@
-import { Tabs } from 'expo-router';
+import { Redirect, Tabs } from 'expo-router';
 import React, { useState } from 'react';
 import { useWindowDimensions } from 'react-native';
+import SplashScreen from '../splash';
 
 import { IconName } from '@/components/atoms/icon';
 import { CustomTabBar, TabItem } from '@/components/organisms/tab-bar';
 import { env } from '@/constants/env';
 import { Breakpoints } from '@/constants/theme';
 import { ActiveTabProvider } from '@/contexts/active-tab';
+import { useAuth } from '@/contexts/auth-context';
 
 export default function TabLayout() {
   const { width } = useWindowDimensions();
+  const { logout, isAuthenticated, isLoading } = useAuth();
   const [activeTab, setActiveTab] = useState('index');
-  
+
+  if (isLoading) {
+    return <SplashScreen />
+  }
+
+  if (!isAuthenticated) {
+    return <Redirect href="/sign-in" />;
+  }
+
   const isMediumScreen = width >= Breakpoints.md;
 
   const primaryTabs = [
@@ -25,8 +36,8 @@ export default function TabLayout() {
     { title: 'Logout', icon: 'log-out' as IconName, onPress: handleLogout },
   ] as TabItem[];
 
-  function handleLogout() {
-    console.log('logout');
+  async function handleLogout() {
+    await logout();
   }
 
   return (
