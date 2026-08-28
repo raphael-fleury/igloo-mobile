@@ -1,10 +1,10 @@
 import { Redirect, Tabs } from 'expo-router';
 import React, { useState } from 'react';
 import { useWindowDimensions } from 'react-native';
-import SplashScreen from '../splash';
 
 import { IconName } from '@/components/atoms/icon';
 import { CustomTabBar, TabItem } from '@/components/organisms/tab-bar';
+import { SplashScreen } from '@/components/screens/splash';
 import { env } from '@/constants/env';
 import { Breakpoints } from '@/constants/theme';
 import { ActiveTabProvider } from '@/contexts/active-tab';
