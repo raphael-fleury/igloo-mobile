@@ -2,6 +2,12 @@ import { TextStyle } from "react-native";
 import { Fonts } from "./fonts";
 
 export const Typography = {
+  hero: {
+    fontFamily: Fonts.sans,
+    fontSize: 48,
+    lineHeight: 56,
+    fontWeight: 700 as TextStyle["fontWeight"],
+  },
   title: {
     fontFamily: Fonts.sans,
     fontSize: 24,
