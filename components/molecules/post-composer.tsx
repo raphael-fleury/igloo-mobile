@@ -32,6 +32,8 @@ export function PostComposer({
   const avatarUrl = loggedProfile?.avatarPath
     ? `http://localhost:9000/public/${loggedProfile.avatarPath}`
     : undefined;
+  const minInputHeight = Typography.title.lineHeight;
+  const [inputHeight, setInputHeight] = React.useState(minInputHeight);
 
   return (
     <View style={[styles.container, { backgroundColor: 'transparent', borderBottomColor: borderColor }]}>
@@ -44,6 +46,7 @@ export function PostComposer({
               color: textColor,
               borderBottomColor: borderColor,
               outline: 'none',
+              height: Math.max(minInputHeight, inputHeight),
             },
           ]}
           placeholder={placeholder}
@@ -51,6 +54,8 @@ export function PostComposer({
           value={value}
           onChangeText={onChangeText}
           multiline
+          scrollEnabled={false}
+          onContentSizeChange={(e) => setInputHeight(e.nativeEvent.contentSize.height)}
           editable={!isLoading}
         />
       </View>
