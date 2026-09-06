@@ -70,8 +70,8 @@ export function PostComposer({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.lg,
     gap: Spacing.md,
     borderBottomWidth: 1,
   },
