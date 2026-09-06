@@ -1,4 +1,6 @@
-import { Spacing, Typography } from '@/constants/theme';
+import { ProfilePhoto } from '@/components/atoms/profile-photo';
+import { IconSize, Spacing, Typography } from '@/constants/theme';
+import { useAuth } from '@/contexts/auth-context';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import React from 'react';
 import {
@@ -23,19 +25,25 @@ export function PostComposer({
   onSubmitPress,
   isLoading = false,
 }: Readonly<PostComposerProps>) {
+  const { loggedProfile } = useAuth();
   const textColor = useThemeColor('default');
   const mutedColor = useThemeColor('muted');
   const borderColor = useThemeColor('border');
+  const avatarUrl = loggedProfile?.avatarPath
+    ? `http://localhost:9000/public/${loggedProfile.avatarPath}`
+    : undefined;
 
   return (
     <View style={[styles.container, { backgroundColor: 'transparent', borderBottomColor: borderColor }]}>
       <View style={[styles.inputWrapper, { borderBottomColor: borderColor }]}>
+        <ProfilePhoto imageUrl={avatarUrl} size="md" />
         <TextInput
           style={[
             styles.input,
             {
               color: textColor,
-              outline: "none",
+              borderBottomColor: borderColor,
+              outline: 'none',
             },
           ]}
           placeholder={placeholder}
@@ -68,14 +76,19 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   inputWrapper: {
-    borderBottomWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: Spacing.md,
     paddingVertical: Spacing.sm,
   },
   input: {
-    fontSize: Typography.input.fontSize,
-    fontFamily: Typography.input.fontFamily,
+    flex: 1,
+    fontSize: Typography.title.fontSize,
+    fontFamily: Typography.title.fontFamily,
     textAlignVertical: 'top',
-    // height: "auto",
+    // borderBottomWidth: 1,
+    // minHeight: Typography.title.lineHeight * 3,
+    marginTop: Typography.title.lineHeight - IconSize.md,
   },
   postButton: {
     alignSelf: 'flex-end',

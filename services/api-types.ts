@@ -39,8 +39,8 @@ export interface Profile {
   username: string;
   displayName: string;
   bio: string;
-  avatarUrl?: string;
-  headerUrl?: string;
+  avatarPath?: string;
+  headerPath?: string;
   followersCount: number;
   followingCount: number;
   postsCount: number;

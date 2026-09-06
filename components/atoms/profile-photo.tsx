@@ -15,7 +15,6 @@ export function ProfilePhoto({
   ...pressableProps
 }: Readonly<ProfilePhotoProps>) {
   const dimension = IconSize[size] * 2;
-  console.log({ imageUrl, size, dimension });
 
   return (
     <Pressable
