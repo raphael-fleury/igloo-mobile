@@ -6,6 +6,7 @@ import React from 'react';
 import {
   StyleSheet,
   TextInput,
+  useWindowDimensions,
   View
 } from 'react-native';
 import { TextButton } from './text-button';
@@ -32,7 +33,10 @@ export function PostComposer({
   const avatarUrl = loggedProfile?.avatarPath
     ? `http://localhost:9000/public/${loggedProfile.avatarPath}`
     : undefined;
+
+  const { height: windowHeight } = useWindowDimensions();
   const minInputHeight = Typography.title.lineHeight;
+  const maxInputHeight = windowHeight * 0.5;
   const [inputHeight, setInputHeight] = React.useState(minInputHeight);
 
   return (
@@ -46,7 +50,7 @@ export function PostComposer({
               color: textColor,
               borderBottomColor: borderColor,
               outline: 'none',
-              height: Math.max(minInputHeight, inputHeight),
+              height: Math.min(Math.max(minInputHeight, inputHeight), maxInputHeight),
             },
           ]}
           placeholder={placeholder}
@@ -54,7 +58,7 @@ export function PostComposer({
           value={value}
           onChangeText={onChangeText}
           multiline
-          scrollEnabled={false}
+          scrollEnabled={inputHeight > maxInputHeight}
           onContentSizeChange={(e) => setInputHeight(e.nativeEvent.contentSize.height)}
           editable={!isLoading}
         />
@@ -83,7 +87,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: Spacing.md,
+    gap: Spacing.lg,
     paddingVertical: Spacing.sm,
   },
   input: {
