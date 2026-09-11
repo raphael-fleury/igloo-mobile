@@ -1,24 +1,20 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import apiClient from '../services/api-client';
 import { FeedResponse, PaginationParams } from '../services/api-types';
 
-// Queries
-export const useGetFeed = (params?: PaginationParams) => {
-  return useQuery({
-    queryKey: ['feed', 'home', params],
-    queryFn: async () => {
-      const response = await apiClient.get<FeedResponse>('/feed/', { params });
-      return response.data;
-    },
-  });
-};
+export type Feed = 'following' | 'trending';
 
-export const useGetFollowingFeed = (params?: PaginationParams) => {
-  return useQuery({
-    queryKey: ['feed', 'following', params],
-    queryFn: async () => {
-      const response = await apiClient.get<FeedResponse>('/feed/following', { params });
+export const useGetFeed = (feed: Feed, params?: Omit<PaginationParams, 'cursor'>) => {
+  return useInfiniteQuery({
+    queryKey: ['feeds', feed, params],
+    queryFn: async ({ pageParam }) => {
+      const response = await apiClient.get<FeedResponse>(`/feeds/${feed}`, {
+        params: { ...params, cursor: pageParam },
+      });
       return response.data;
     },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) =>
+      lastPage.hasNextPage ? lastPage.items.at(-1)?.id : undefined,
   });
 };

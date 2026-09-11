@@ -95,12 +95,33 @@ export interface PostListResponse {
 }
 
 // Feed Types
-export interface FeedItem extends Post {}
+export interface FeedItemPost {
+  id: string;
+  content: string;
+  createdAt: string;
+  profile: Profile;
+}
+
+export interface FeedItem {
+  id: string;
+  content: string;
+  createdAt: string;
+  profile: Profile;
+  repliedPost: FeedItemPost | null;
+  quotedPost: FeedItemPost | null;
+  mentions: Profile[];
+  likes: number;
+  reposts: number;
+  replies: number;
+  quotes: number;
+  isLiked?: boolean;
+  isReposted?: boolean;
+}
 
 export interface FeedResponse {
-  data: FeedItem[];
-  cursor?: string;
-  hasMore: boolean;
+  count: number;
+  hasNextPage: boolean;
+  items: FeedItem[];
 }
 
 // Error Response

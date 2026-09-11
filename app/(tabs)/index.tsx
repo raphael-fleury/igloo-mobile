@@ -1,6 +1,8 @@
 import { PostComposer } from "@/components/molecules/post-composer";
 import { TabItem, Tabs } from "@/components/molecules/tabs";
+import { Feed } from "@/components/organisms/feed";
 import { PageLayout } from "@/components/organisms/page-layout";
+import { Feed as FeedName } from "@/hooks/use-feeds";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { useState } from "react";
 import { View } from "react-native";
@@ -58,7 +60,7 @@ export default function HomeScreen() {
           onChangeText={setPostContent}
           onSubmitPress={handlePostSubmit}
         />
-        <View style={{ flex: 1 }} />
+        <Feed feed={activeTab as FeedName} />
       </View>
     </PageLayout>
   );
