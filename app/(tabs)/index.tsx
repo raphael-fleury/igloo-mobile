@@ -1,7 +1,7 @@
-import { PostComposer } from "@/components/molecules/post-composer";
 import { TabItem, Tabs } from "@/components/molecules/tabs";
 import { Feed } from "@/components/organisms/feed";
 import { PageLayout } from "@/components/organisms/page-layout";
+import { PostComposer } from "@/components/organisms/post-composer";
 import { Feed as FeedName } from "@/hooks/use-feeds";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { useState } from "react";
@@ -13,13 +13,7 @@ const HOME_TABS: TabItem[] = [
 ];
 
 export default function HomeScreen() {
-  const [postContent, setPostContent] = useState('');
   const [activeTab, setActiveTab] = useState('following');
-
-  const handlePostSubmit = () => {
-    console.log('Post submitted:', postContent);
-    setPostContent('');
-  };
 
   const sidebarSections = [
     {
@@ -54,12 +48,7 @@ export default function HomeScreen() {
           onTabPress={setActiveTab}
           centered
         />
-        <PostComposer
-          placeholder="What's on your mind?"
-          value={postContent}
-          onChangeText={setPostContent}
-          onSubmitPress={handlePostSubmit}
-        />
+        <PostComposer />
         <Feed feed={activeTab as FeedName} />
       </View>
     </PageLayout>

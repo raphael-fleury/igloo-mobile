@@ -5,7 +5,6 @@ import { QuotedPost } from '@/components/molecules/quoted-post';
 import { env } from '@/constants/env';
 import { Spacing } from '@/constants/theme';
 import {
-  useCreatePost,
   useLikePost,
   useRepostPost,
   useUnlikePost,
@@ -16,7 +15,7 @@ import { FeedItem } from '@/services/api-types';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Modal } from '../containers/modal';
-import { PostComposer } from '../molecules/post-composer';
+import { PostComposer } from './post-composer';
 
 type PostProps = {
   post: FeedItem;
@@ -36,13 +35,11 @@ export function Post({ post }: Readonly<PostProps>) {
   const [isLiked, setIsLiked] = useState(post.isLiked ?? false);
   const [isReposted, setIsReposted] = useState(post.isReposted ?? false);
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
-  const [replyContent, setReplyContent] = useState('');
 
   const { mutate: likePost } = useLikePost();
   const { mutate: unlikePost } = useUnlikePost();
   const { mutate: repostPost } = useRepostPost();
   const { mutate: unrepostPost } = useUnrepostPost();
-  const { mutate: createPost, isPending: isCreatingReply } = useCreatePost();
 
   const handleLikePress = () => {
     const nextIsLiked = !isLiked;
@@ -64,20 +61,6 @@ export function Post({ post }: Readonly<PostProps>) {
     } else {
       unrepostPost(post.id, { onError: () => setIsReposted(true) });
     }
-  };
-
-  const handleReplySubmit = () => {
-    if (!replyContent.trim()) return;
-
-    createPost(
-      { content: replyContent.trim(), repliedPostId: post.id },
-      {
-        onSuccess: () => {
-          setReplyContent('');
-          setIsReplyModalOpen(false);
-        },
-      }
-    );
   };
 
   return (
@@ -120,11 +103,8 @@ export function Post({ post }: Readonly<PostProps>) {
         onClose={() => setIsReplyModalOpen(false)}
       >
         <PostComposer
-          placeholder={`Reply to @${post.profile.username}`}
-          value={replyContent}
-          onChangeText={setReplyContent}
-          onSubmitPress={handleReplySubmit}
-          isLoading={isCreatingReply}
+          repliedPost={post}
+          onSuccess={() => setIsReplyModalOpen(false)}
           containerStyle={styles.composerInModal}
         />
       </Modal>
