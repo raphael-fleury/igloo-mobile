@@ -88,6 +88,11 @@ export function Post({ post }: Readonly<PostProps>) {
             @{post.profile.username}
           </Text>
         </View>
+        {post.repliedPost && (
+          <Text variant="caption" colorName="muted">
+            Replying to @{post.repliedPost.profile.username}
+          </Text>
+        )}
         <Text variant="body">{post.content}</Text>
         <View style={styles.footer}>
           <PostAction
