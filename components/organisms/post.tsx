@@ -1,19 +1,20 @@
 import { ProfilePhoto } from '@/components/atoms/profile-photo';
 import { Text } from '@/components/atoms/text';
 import { IconButton } from '@/components/molecules/icon-button';
-import { PostComposerModal } from '@/components/organisms/post-composer-modal';
 import { Spacing } from '@/constants/theme';
 import {
-    useCreatePost,
-    useLikePost,
-    useRepostPost,
-    useUnlikePost,
-    useUnrepostPost,
+  useCreatePost,
+  useLikePost,
+  useRepostPost,
+  useUnlikePost,
+  useUnrepostPost,
 } from '@/hooks/use-posts';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { FeedItem } from '@/services/api-types';
 import { ComponentProps, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { Modal } from '../containers/modal';
+import { PostComposer } from '../molecules/post-composer';
 
 type PostProps = {
   post: FeedItem;
@@ -110,15 +111,19 @@ export function Post({ post }: Readonly<PostProps>) {
         </View>
       </View>
 
-      <PostComposerModal
+      <Modal
         visible={isReplyModalOpen}
         onClose={() => setIsReplyModalOpen(false)}
-        placeholder={`Reply to @${post.profile.username}`}
-        value={replyContent}
-        onChangeText={setReplyContent}
-        onSubmitPress={handleReplySubmit}
-        isLoading={isCreatingReply}
-      />
+      >
+        <PostComposer
+          placeholder={`Reply to @${post.profile.username}`}
+          value={replyContent}
+          onChangeText={setReplyContent}
+          onSubmitPress={handleReplySubmit}
+          isLoading={isCreatingReply}
+          containerStyle={styles.composerInModal}
+        />
+      </Modal>
     </View>
   );
 }
@@ -177,6 +182,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.xs,
+  },
+  composerInModal: {
+    borderBottomWidth: 0,
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: Spacing.sm,
   },
 });
 
