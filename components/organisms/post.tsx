@@ -87,6 +87,12 @@ export function Post({ post }: Readonly<PostProps>) {
           <Text variant="caption" colorName="muted" numberOfLines={1}>
             @{post.profile.username}
           </Text>
+          <Text variant="caption" colorName="muted">
+            ·
+          </Text>
+          <Text variant="caption" colorName="muted">
+            {formatPostDate(post.createdAt)}
+          </Text>
         </View>
         {post.repliedPost && (
           <Text variant="caption" colorName="muted">
@@ -194,4 +200,34 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.sm,
   },
 });
+
+function formatPostDate(dateString: string): string {
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) {
+    return '';
+  }
+
+  const now = new Date();
+  const diffInMs = now.getTime() - date.getTime();
+  const diffInSeconds = Math.max(0, Math.floor(diffInMs / 1000));
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  const diffInHours = Math.floor(diffInMinutes / 60);
+
+  if (diffInHours < 24) {
+    if (diffInMinutes < 1) {
+      return '1m';
+    }
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes}m`;
+    }
+    return `${diffInHours}h`;
+  }
+
+  const isCurrentYear = date.getFullYear() === now.getFullYear();
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    ...(isCurrentYear ? {} : { year: 'numeric' }),
+  });
+}
 
