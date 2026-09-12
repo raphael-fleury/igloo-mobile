@@ -2,9 +2,9 @@ import { Spacing } from '@/constants/theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { ReactNode } from 'react';
 import {
+  Pressable,
   Modal as RNModal,
   ModalProps as RNModalProps,
-  Pressable,
   StyleProp,
   StyleSheet,
   View,

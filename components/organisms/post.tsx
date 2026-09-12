@@ -12,8 +12,9 @@ import {
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { FeedItem } from '@/services/api-types';
 import { ComponentProps, useRef, useState } from 'react';
-import { Pressable, Modal as RNModal, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Modal } from '../containers/modal';
+import { Popover } from '../containers/popover';
 import { PostComposer } from '../molecules/post-composer';
 import { TextButton } from '../molecules/text-button';
 
@@ -25,7 +26,6 @@ type PostProps = {
 // TODO: Showing interaction counts as "10k", "1.2M", etc. instead of the exact number, when the counts are large.
 // TODO: Implement quote and share functionality for posts.
 export function Post({ post }: Readonly<PostProps>) {
-  const surfaceColor = useThemeColor('surface');
   const borderColor = useThemeColor('border');
   const avatarUrl = post.profile.avatarPath
     ? `http://localhost:9000/public/${post.profile.avatarPath}`
@@ -148,39 +148,21 @@ export function Post({ post }: Readonly<PostProps>) {
         </View>
       </View>
 
-      <RNModal
+      <Popover
         visible={isSharePopoverOpen}
-        transparent
-        animationType="none"
-        onRequestClose={() => setIsSharePopoverOpen(false)}
+        onClose={() => setIsSharePopoverOpen(false)}
+        position={popoverPosition}
       >
-        <Pressable
-          style={StyleSheet.absoluteFill}
-          onPress={() => setIsSharePopoverOpen(false)}
-        >
-          <View
-            style={[
-              styles.popoverMenu,
-              {
-                top: popoverPosition.top,
-                left: popoverPosition.left,
-                backgroundColor: surfaceColor,
-                borderColor,
-              },
-            ]}
-          >
-            <TextButton
-              icon="link"
-              text="Copy link"
-              variant="default"
-              textVariant="caption"
-              onPress={() => {
-                setIsSharePopoverOpen(false);
-              }}
-            />
-          </View>
-        </Pressable>
-      </RNModal>
+        <TextButton
+          icon="link"
+          text="Copy link"
+          variant="default"
+          textVariant="caption"
+          onPress={() => {
+            setIsSharePopoverOpen(false);
+          }}
+        />
+      </Popover>
 
       <Modal
         visible={isReplyModalOpen}
@@ -253,18 +235,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.xs,
-  },
-  popoverMenu: {
-    position: 'absolute',
-    minWidth: 140,
-    borderRadius: Spacing.sm,
-    borderWidth: 1,
-    padding: Spacing.xs,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 4,
   },
   composerInModal: {
     borderBottomWidth: 0,
