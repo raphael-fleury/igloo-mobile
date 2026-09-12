@@ -1,8 +1,10 @@
 import { ProfilePhoto } from '@/components/atoms/profile-photo';
 import { Text } from '@/components/atoms/text';
 import { IconButton } from '@/components/molecules/icon-button';
+import { PostComposerModal } from '@/components/organisms/post-composer-modal';
 import { Spacing } from '@/constants/theme';
 import {
+    useCreatePost,
     useLikePost,
     useRepostPost,
     useUnlikePost,
@@ -17,6 +19,9 @@ type PostProps = {
   post: FeedItem;
 };
 
+// TODO: Update like and repost counts when the user likes or reposts a post, instead of just toggling the state.
+// TODO: Showing interaction counts as "10k", "1.2M", etc. instead of the exact number, when the counts are large.
+// TODO: Implement quote and share functionality for posts.
 export function Post({ post }: Readonly<PostProps>) {
   const borderColor = useThemeColor('border');
   const avatarUrl = post.profile.avatarPath
@@ -25,11 +30,14 @@ export function Post({ post }: Readonly<PostProps>) {
 
   const [isLiked, setIsLiked] = useState(post.isLiked ?? false);
   const [isReposted, setIsReposted] = useState(post.isReposted ?? false);
+  const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
+  const [replyContent, setReplyContent] = useState('');
 
   const { mutate: likePost } = useLikePost();
   const { mutate: unlikePost } = useUnlikePost();
   const { mutate: repostPost } = useRepostPost();
   const { mutate: unrepostPost } = useUnrepostPost();
+  const { mutate: createPost, isPending: isCreatingReply } = useCreatePost();
 
   const handleLikePress = () => {
     const nextIsLiked = !isLiked;
@@ -53,6 +61,20 @@ export function Post({ post }: Readonly<PostProps>) {
     }
   };
 
+  const handleReplySubmit = () => {
+    if (!replyContent.trim()) return;
+
+    createPost(
+      { content: replyContent.trim(), repliedPostId: post.id },
+      {
+        onSuccess: () => {
+          setReplyContent('');
+          setIsReplyModalOpen(false);
+        },
+      }
+    );
+  };
+
   return (
     <View style={[styles.container, { borderBottomColor: borderColor }]}>
       <ProfilePhoto imageUrl={avatarUrl} size="md" />
@@ -67,7 +89,11 @@ export function Post({ post }: Readonly<PostProps>) {
         </View>
         <Text variant="body">{post.content}</Text>
         <View style={styles.footer}>
-          <PostAction icon="message-circle" count={post.replies} />
+          <PostAction
+            icon="message-circle"
+            count={post.replies}
+            onPress={() => setIsReplyModalOpen(true)}
+          />
           <PostAction
             icon="repeat"
             count={post.reposts + post.quotes}
@@ -83,6 +109,16 @@ export function Post({ post }: Readonly<PostProps>) {
           <PostAction icon="share" />
         </View>
       </View>
+
+      <PostComposerModal
+        visible={isReplyModalOpen}
+        onClose={() => setIsReplyModalOpen(false)}
+        placeholder={`Reply to @${post.profile.username}`}
+        value={replyContent}
+        onChangeText={setReplyContent}
+        onSubmitPress={handleReplySubmit}
+        isLoading={isCreatingReply}
+      />
     </View>
   );
 }
@@ -143,3 +179,4 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
   },
 });
+

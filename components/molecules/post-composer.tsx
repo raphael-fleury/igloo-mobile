@@ -4,10 +4,12 @@ import { useAuth } from '@/contexts/auth-context';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import React from 'react';
 import {
+  StyleProp,
   StyleSheet,
   TextInput,
   useWindowDimensions,
-  View
+  View,
+  ViewStyle,
 } from 'react-native';
 import { TextButton } from './text-button';
 
@@ -17,6 +19,7 @@ type PostComposerProps = {
   onChangeText?: (text: string) => void;
   onSubmitPress?: () => void;
   isLoading?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 
 export function PostComposer({
@@ -25,6 +28,7 @@ export function PostComposer({
   onChangeText,
   onSubmitPress,
   isLoading = false,
+  containerStyle,
 }: Readonly<PostComposerProps>) {
   const { loggedProfile } = useAuth();
   const textColor = useThemeColor('default');
@@ -40,7 +44,13 @@ export function PostComposer({
   const [inputHeight, setInputHeight] = React.useState(minInputHeight);
 
   return (
-    <View style={[styles.container, { backgroundColor: 'transparent', borderBottomColor: borderColor }]}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: 'transparent', borderBottomColor: borderColor },
+        containerStyle,
+      ]}
+    >
       <View style={[styles.inputWrapper, { borderBottomColor: borderColor }]}>
         <ProfilePhoto imageUrl={avatarUrl} size="md" />
         <TextInput
