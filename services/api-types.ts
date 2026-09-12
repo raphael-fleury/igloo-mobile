@@ -68,8 +68,7 @@ export interface ProfileListResponse {
 export interface Post {
   id: string;
   content: string;
-  authorId: string;
-  author?: Profile;
+  profile: Profile;
   repliedPostId?: string;
   quotedPostId?: string;
   likesCount: number;

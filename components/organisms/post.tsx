@@ -1,6 +1,7 @@
 import { ProfilePhoto } from '@/components/atoms/profile-photo';
 import { Text } from '@/components/atoms/text';
 import { PostFooter } from '@/components/molecules/post-footer';
+import { QuotedPost } from '@/components/molecules/quoted-post';
 import { env } from '@/constants/env';
 import { Spacing } from '@/constants/theme';
 import {
@@ -23,7 +24,6 @@ type PostProps = {
 
 // TODO: Update like and repost counts when the user likes or reposts a post, instead of just toggling the state.
 // TODO: Showing interaction counts as "10k", "1.2M", etc. instead of the exact number, when the counts are large.
-// TODO: Show quoted post.
 // TODO: Implement quote functionality for posts.
 // TODO: Implement "See quotes" functionality for posts.
 // TODO: Implement profile links.
@@ -104,6 +104,7 @@ export function Post({ post }: Readonly<PostProps>) {
           </Text>
         )}
         <Text variant="body">{post.content}</Text>
+        {post.quotedPost && <QuotedPost post={post.quotedPost} />}
         <PostFooter
           post={post}
           isLiked={isLiked}
