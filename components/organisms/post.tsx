@@ -1,6 +1,7 @@
 import { ProfilePhoto } from '@/components/atoms/profile-photo';
 import { Text } from '@/components/atoms/text';
 import { PostFooter } from '@/components/molecules/post-footer';
+import { env } from '@/constants/env';
 import { Spacing } from '@/constants/theme';
 import {
   useCreatePost,
@@ -30,7 +31,7 @@ type PostProps = {
 export function Post({ post }: Readonly<PostProps>) {
   const borderColor = useThemeColor('border');
   const avatarUrl = post.profile.avatarPath
-    ? `http://localhost:9000/public/${post.profile.avatarPath}`
+    ? `${env.STORAGE_BASE_URL}/public/${post.profile.avatarPath}`
     : undefined;
 
   const [isLiked, setIsLiked] = useState(post.isLiked ?? false);

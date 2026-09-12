@@ -1,4 +1,5 @@
 import { ProfilePhoto } from '@/components/atoms/profile-photo';
+import { env } from '@/constants/env';
 import { IconSize, Spacing, Typography } from '@/constants/theme';
 import { useAuth } from '@/contexts/auth-context';
 import { useThemeColor } from '@/hooks/use-theme-color';
@@ -35,7 +36,7 @@ export function PostComposer({
   const mutedColor = useThemeColor('muted');
   const borderColor = useThemeColor('border');
   const avatarUrl = loggedProfile?.avatarPath
-    ? `http://localhost:9000/public/${loggedProfile.avatarPath}`
+    ? `${env.STORAGE_BASE_URL}/public/${loggedProfile.avatarPath}`
     : undefined;
 
   const { height: windowHeight } = useWindowDimensions();
