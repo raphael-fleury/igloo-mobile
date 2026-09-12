@@ -2,8 +2,10 @@ import { Text } from '@/components/atoms/text';
 import { Popover } from '@/components/containers/popover';
 import { IconButton } from '@/components/molecules/icon-button';
 import { TextButton } from '@/components/molecules/text-button';
+import { env } from '@/constants/env';
 import { Spacing } from '@/constants/theme';
 import { FeedItem } from '@/services/api-types';
+import * as Clipboard from 'expo-clipboard';
 import { ComponentProps, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -24,6 +26,8 @@ export function PostFooter({
   onRepostPress,
   onReplyPress,
 }: Readonly<PostFooterProps>) {
+  const postUrl = `${env.WEB_BASE_URL}/posts/${post.id}`;
+  
   const [isSharePopoverOpen, setIsSharePopoverOpen] = useState(false);
   const [sharePopoverPosition, setSharePopoverPosition] = useState({ top: 0, left: 0 });
   const shareButtonRef = useRef<View>(null);
@@ -138,8 +142,11 @@ export function PostFooter({
           text="Copy link"
           variant="default"
           textVariant="caption"
-          onPress={() => {
+          onPress={async () => {
             setIsSharePopoverOpen(false);
+            if (postUrl) {
+              await Clipboard.setStringAsync(postUrl);
+            }
           }}
         />
       </Popover>

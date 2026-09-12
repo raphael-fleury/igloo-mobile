@@ -26,7 +26,6 @@ type PostProps = {
 // TODO: Show quoted post.
 // TODO: Implement quote functionality for posts.
 // TODO: Implement "See quotes" functionality for posts.
-// TODO: Implement "Copy Link" functionality for posts.
 // TODO: Implement profile links.
 export function Post({ post }: Readonly<PostProps>) {
   const borderColor = useThemeColor('border');
