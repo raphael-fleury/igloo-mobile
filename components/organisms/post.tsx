@@ -1,6 +1,6 @@
 import { ProfilePhoto } from '@/components/atoms/profile-photo';
 import { Text } from '@/components/atoms/text';
-import { IconButton } from '@/components/molecules/icon-button';
+import { PostFooter } from '@/components/molecules/post-footer';
 import { Spacing } from '@/constants/theme';
 import {
   useCreatePost,
@@ -11,12 +11,10 @@ import {
 } from '@/hooks/use-posts';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { FeedItem } from '@/services/api-types';
-import { ComponentProps, useRef, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Modal } from '../containers/modal';
-import { Popover } from '../containers/popover';
 import { PostComposer } from '../molecules/post-composer';
-import { TextButton } from '../molecules/text-button';
 
 type PostProps = {
   post: FeedItem;
@@ -39,12 +37,6 @@ export function Post({ post }: Readonly<PostProps>) {
   const [isReposted, setIsReposted] = useState(post.isReposted ?? false);
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
   const [replyContent, setReplyContent] = useState('');
-  const [isSharePopoverOpen, setIsSharePopoverOpen] = useState(false);
-  const [sharePopoverPosition, setSharePopoverPosition] = useState({ top: 0, left: 0 });
-  const shareButtonRef = useRef<View>(null);
-  const [isRepostPopoverOpen, setIsRepostPopoverOpen] = useState(false);
-  const [repostPopoverPosition, setRepostPopoverPosition] = useState({ top: 0, left: 0 });
-  const repostButtonRef = useRef<View>(null);
 
   const { mutate: likePost } = useLikePost();
   const { mutate: unlikePost } = useUnlikePost();
@@ -72,36 +64,6 @@ export function Post({ post }: Readonly<PostProps>) {
     } else {
       unrepostPost(post.id, { onError: () => setIsReposted(true) });
     }
-  };
-
-  const handleRepostButtonPress = () => {
-    if (isRepostPopoverOpen) {
-      setIsRepostPopoverOpen(false);
-      return;
-    }
-
-    repostButtonRef.current?.measureInWindow((x, y, width, height) => {
-      setRepostPopoverPosition({
-        top: y + height + Spacing.xs,
-        left: Math.max(Spacing.sm, x + width - 140),
-      });
-      setIsRepostPopoverOpen(true);
-    });
-  };
-
-  const handleSharePress = () => {
-    if (isSharePopoverOpen) {
-      setIsSharePopoverOpen(false);
-      return;
-    }
-
-    shareButtonRef.current?.measureInWindow((x, y, width, height) => {
-      setSharePopoverPosition({
-        top: y + height + Spacing.xs,
-        left: Math.max(Spacing.sm, x + width - 140),
-      });
-      setIsSharePopoverOpen(true);
-    });
   };
 
   const handleReplySubmit = () => {
@@ -142,86 +104,15 @@ export function Post({ post }: Readonly<PostProps>) {
           </Text>
         )}
         <Text variant="body">{post.content}</Text>
-        <View style={styles.footer}>
-          <PostAction
-            icon="message-circle"
-            count={post.replies}
-            onPress={() => setIsReplyModalOpen(true)}
-          />
-          <View ref={repostButtonRef} collapsable={false}>
-            <PostAction
-              icon="repeat"
-              count={post.reposts + post.quotes}
-              active={isReposted}
-              onPress={handleRepostButtonPress}
-            />
-          </View>
-          <PostAction
-            icon="heart"
-            count={post.likes}
-            active={isLiked}
-            onPress={handleLikePress}
-          />
-          <View ref={shareButtonRef} collapsable={false}>
-            <PostAction
-              icon="share"
-              active={isSharePopoverOpen}
-              onPress={handleSharePress}
-            />
-          </View>
-        </View>
+        <PostFooter
+          post={post}
+          isLiked={isLiked}
+          isReposted={isReposted}
+          onLikePress={handleLikePress}
+          onRepostPress={handleRepostPress}
+          onReplyPress={() => setIsReplyModalOpen(true)}
+        />
       </View>
-
-      <Popover
-        visible={isRepostPopoverOpen}
-        onClose={() => setIsRepostPopoverOpen(false)}
-        position={repostPopoverPosition}
-      >
-        <TextButton
-          icon="repeat"
-          text={isReposted ? 'Undo repost' : 'Repost'}
-          variant="default"
-          textVariant="caption"
-          onPress={() => {
-            setIsRepostPopoverOpen(false);
-            handleRepostPress();
-          }}
-        />
-        <TextButton
-          icon="edit-3"
-          text="Quote"
-          variant="default"
-          textVariant="caption"
-          onPress={() => {
-            setIsRepostPopoverOpen(false);
-          }}
-        />
-        <TextButton
-          icon="list"
-          text="See quotes"
-          variant="default"
-          textVariant="caption"
-          onPress={() => {
-            setIsRepostPopoverOpen(false);
-          }}
-        />
-      </Popover>
-
-      <Popover
-        visible={isSharePopoverOpen}
-        onClose={() => setIsSharePopoverOpen(false)}
-        position={sharePopoverPosition}
-      >
-        <TextButton
-          icon="link"
-          text="Copy link"
-          variant="default"
-          textVariant="caption"
-          onPress={() => {
-            setIsSharePopoverOpen(false);
-          }}
-        />
-      </Popover>
 
       <Modal
         visible={isReplyModalOpen}
@@ -236,31 +127,6 @@ export function Post({ post }: Readonly<PostProps>) {
           containerStyle={styles.composerInModal}
         />
       </Modal>
-    </View>
-  );
-}
-
-type PostActionProps = {
-  icon: ComponentProps<typeof IconButton>['name'];
-  count?: number;
-  active?: boolean;
-  onPress?: () => void;
-};
-
-function PostAction({ icon, count, active, onPress }: Readonly<PostActionProps>) {
-  return (
-    <View style={styles.action}>
-      <IconButton
-        name={icon}
-        variant={active ? 'accent' : 'muted'}
-        size="sm"
-        onPress={onPress}
-      />
-      {count !== undefined && (
-        <Text variant="caption" colorName={active ? 'accent' : 'muted'}>
-          {count}
-        </Text>
-      )}
     </View>
   );
 }
@@ -283,17 +149,6 @@ const styles = StyleSheet.create({
   },
   displayName: {
     fontWeight: 600,
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    maxWidth: 320,
-    marginTop: Spacing.xs,
-  },
-  action: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xs,
   },
   composerInModal: {
     borderBottomWidth: 0,
