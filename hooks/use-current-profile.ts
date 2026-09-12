@@ -1,6 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../services/api-client';
-import { PaginationParams, Profile, ProfileListResponse, UpdateProfileRequest } from '../services/api-types';
+import {
+  BlockedProfilesPage,
+  FollowsPage,
+  MutedProfilesPage,
+  PaginationParams,
+  Profile,
+  UpdateProfileRequest,
+} from '../services/api-types';
 
 // Queries
 export const useGetCurrentProfile = () => {
@@ -17,7 +24,7 @@ export const useGetCurrentProfileFollowers = (params?: PaginationParams) => {
   return useQuery({
     queryKey: ['profile', 'current', 'followers', params],
     queryFn: async () => {
-      const response = await apiClient.get<ProfileListResponse>('/me/profile/followers', { params });
+      const response = await apiClient.get<FollowsPage>('/me/profile/followers', { params });
       return response.data;
     },
   });
@@ -27,7 +34,7 @@ export const useGetCurrentProfileFollowing = (params?: PaginationParams) => {
   return useQuery({
     queryKey: ['profile', 'current', 'following', params],
     queryFn: async () => {
-      const response = await apiClient.get<ProfileListResponse>('/me/profile/following', { params });
+      const response = await apiClient.get<FollowsPage>('/me/profile/following', { params });
       return response.data;
     },
   });
@@ -37,7 +44,7 @@ export const useGetCurrentProfileBlocks = (params?: PaginationParams) => {
   return useQuery({
     queryKey: ['profile', 'current', 'blocks', params],
     queryFn: async () => {
-      const response = await apiClient.get<ProfileListResponse>('/me/profile/blocks', { params });
+      const response = await apiClient.get<BlockedProfilesPage>('/me/profile/blocks', { params });
       return response.data;
     },
   });
@@ -47,7 +54,7 @@ export const useGetCurrentProfileMutes = (params?: PaginationParams) => {
   return useQuery({
     queryKey: ['profile', 'current', 'mutes', params],
     queryFn: async () => {
-      const response = await apiClient.get<ProfileListResponse>('/me/profile/mutes', { params });
+      const response = await apiClient.get<MutedProfilesPage>('/me/profile/mutes', { params });
       return response.data;
     },
   });
@@ -72,10 +79,10 @@ export const useUploadCurrentProfileAvatar = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (file: File) => {
+    mutationFn: async (file: Blob | File | { uri: string; name?: string; type?: string }) => {
       const formData = new FormData();
-      formData.append('file', file);
-      const response = await apiClient.post('/me/profile/avatar', formData, {
+      formData.append('avatar', file as unknown as Blob);
+      const response = await apiClient.post<Profile>('/me/profile/avatar', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -105,10 +112,10 @@ export const useUploadCurrentProfileHeader = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (file: File) => {
+    mutationFn: async (file: Blob | File | { uri: string; name?: string; type?: string }) => {
       const formData = new FormData();
-      formData.append('file', file);
-      const response = await apiClient.post('/me/profile/header', formData, {
+      formData.append('header', file as unknown as Blob);
+      const response = await apiClient.post<Profile>('/me/profile/header', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

@@ -6,7 +6,7 @@ import { IconSize, Spacing, Typography } from '@/constants/theme';
 import { useAuth } from '@/contexts/auth-context';
 import { useCreatePost } from '@/hooks/use-posts';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { FeedItem, FeedItemPost, Post } from '@/services/api-types';
+import { PostDetailed } from '@/services/api-types';
 import React, { useState } from 'react';
 import {
   StyleProp,
@@ -18,8 +18,8 @@ import {
 } from 'react-native';
 
 type PostComposerProps = {
-  repliedPost?: Post | FeedItem | FeedItemPost;
-  quotedPost?: Post | FeedItem | FeedItemPost;
+  repliedPost?: PostDetailed;
+  quotedPost?: PostDetailed;
   containerStyle?: StyleProp<ViewStyle>;
   onSuccess?: () => void;
 };

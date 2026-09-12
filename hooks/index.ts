@@ -16,3 +16,6 @@ export * from './use-posts';
 // Feeds Hooks
 export * from './use-feeds';
 
+// Notifications Hooks
+export * from './use-notifications';
+

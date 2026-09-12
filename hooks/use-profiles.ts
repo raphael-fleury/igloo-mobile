@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../services/api-client';
-import { PaginationParams, Profile, ProfileListResponse } from '../services/api-types';
+import { FollowsPage, PaginationParams, Profile } from '../services/api-types';
 
 // Queries
 export const useGetProfileById = (id: string) => {
@@ -18,7 +18,7 @@ export const useGetProfileFollowers = (id: string, params?: PaginationParams) =>
   return useQuery({
     queryKey: ['profile', id, 'followers', params],
     queryFn: async () => {
-      const response = await apiClient.get<ProfileListResponse>(`/profiles/${id}/followers`, { params });
+      const response = await apiClient.get<FollowsPage>(`/profiles/${id}/followers`, { params });
       return response.data;
     },
     enabled: !!id,
@@ -29,7 +29,7 @@ export const useGetProfileFollowing = (id: string, params?: PaginationParams) =>
   return useQuery({
     queryKey: ['profile', id, 'following', params],
     queryFn: async () => {
-      const response = await apiClient.get<ProfileListResponse>(`/profiles/${id}/following`, { params });
+      const response = await apiClient.get<FollowsPage>(`/profiles/${id}/following`, { params });
       return response.data;
     },
     enabled: !!id,
@@ -42,8 +42,7 @@ export const useFollowProfile = () => {
 
   return useMutation({
     mutationFn: async (profileId: string) => {
-      const response = await apiClient.post<Profile>(`/profiles/${profileId}/follow`, {});
-      return response.data;
+      await apiClient.post(`/profiles/${profileId}/follow`, {});
     },
     onSuccess: (_, profileId) => {
       queryClient.invalidateQueries({ queryKey: ['profile', profileId] });

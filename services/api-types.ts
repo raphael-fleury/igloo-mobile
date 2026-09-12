@@ -18,14 +18,25 @@ export interface LoginRequest {
 export interface AuthResponse {
   token: string;
 }
+export type TokenResponse = AuthResponse;
+
+// Error Types
+export interface ApiError {
+  message: string;
+}
+export type ErrorResponse = ApiError;
+export type UnauthorizedError = ApiError;
+export type ForbiddenError = ApiError;
+export type NotFoundError = ApiError;
+export type UnprocessableEntityError = ApiError;
+export type ConflictError = ApiError;
 
 // User Types
 export interface User {
   id: string;
-  phone?: string;
+  phone: string;
   email: string;
   createdAt: string;
-  updatedAt: string;
 }
 
 export interface UpdateUserRequest {
@@ -39,15 +50,8 @@ export interface Profile {
   username: string;
   displayName: string;
   bio: string;
-  avatarPath?: string;
-  headerPath?: string;
-  followersCount: number;
-  followingCount: number;
-  postsCount: number;
-  isFollowing?: boolean;
-  isFollowedBy?: boolean;
-  isBlocked?: boolean;
-  isMuted?: boolean;
+  avatarPath?: string | null;
+  headerPath?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -58,27 +62,30 @@ export interface UpdateProfileRequest {
   bio?: string;
 }
 
-export interface ProfileListResponse {
-  data: Profile[];
-  cursor?: string;
-  hasMore: boolean;
-}
-
 // Post Types
 export interface Post {
   id: string;
   content: string;
   profile: Profile;
-  repliedPostId?: string;
-  quotedPostId?: string;
-  likesCount: number;
-  repostsCount: number;
-  repliesCount: number;
-  quotesCount: number;
-  isLiked?: boolean;
-  isReposted?: boolean;
+  repliedPostId?: string | null;
+  quotedPostId?: string | null;
   createdAt: string;
-  updatedAt: string;
+}
+
+export interface Mention {
+  id: string;
+  mentionedProfile: Profile;
+  usernameAtMention: string;
+}
+
+export interface PostDetailed extends Post {
+  repliedPost?: Post | null;
+  quotedPost?: Post | null;
+  mentions: Mention[];
+  likes: number;
+  reposts: number;
+  replies: number;
+  quotes: number;
 }
 
 export interface CreatePostRequest {
@@ -87,50 +94,63 @@ export interface CreatePostRequest {
   quotedPostId?: string | null;
 }
 
-export interface PostListResponse {
-  data: Post[];
-  cursor?: string;
-  hasMore: boolean;
-}
-
-// Feed Types
-export interface FeedItemPost {
-  id: string;
-  content: string;
-  createdAt: string;
-  profile: Profile;
-}
-
-export interface FeedItem {
-  id: string;
-  content: string;
-  createdAt: string;
-  profile: Profile;
-  repliedPost: FeedItemPost | null;
-  quotedPost: FeedItemPost | null;
-  mentions: Profile[];
-  likes: number;
-  reposts: number;
-  replies: number;
-  quotes: number;
-  isLiked?: boolean;
-  isReposted?: boolean;
-}
-
-export interface FeedResponse {
-  count: number;
-  hasNextPage: boolean;
-  items: FeedItem[];
-}
-
-// Error Response
-export interface ErrorResponse {
+export interface DeletedResponse {
   message: string;
-  statusCode?: number;
+  deletedAt: string;
 }
 
-// Pagination Types
+// Pagination & Response Page Types
 export interface PaginationParams {
   cursor?: string;
   limit?: number;
+}
+export type PageQuery = PaginationParams;
+
+export interface Page<T> {
+  hasNextPage: boolean;
+  nextCursor?: string;
+  count: number;
+  items: T[];
+}
+
+export type PostsPage = Page<PostDetailed>;
+export type PostListResponse = PostsPage;
+
+export type FollowedProfile = Profile & { followedAt: string };
+export type FollowsPage = Page<FollowedProfile>;
+export type ProfileListResponse = FollowsPage;
+
+export type BlockedProfile = Profile & { blockedAt: string };
+export type BlockedProfilesPage = Page<BlockedProfile>;
+
+export type MutedProfile = Profile & { mutedAt: string };
+export type MutedProfilesPage = Page<MutedProfile>;
+
+export type LikedProfile = Profile & { likedAt: string };
+export type LikesPage = Page<LikedProfile>;
+
+export type RepostedProfile = Profile & { repostedAt: string };
+export type RepostsPage = Page<RepostedProfile>;
+
+// Notifications Types
+export type NotificationType = 'follow' | 'like' | 'repost' | 'reply' | 'quote';
+
+export interface Notification {
+  id: string;
+  type: NotificationType;
+  targetProfile: Profile;
+  actorProfile: Profile;
+  post?: Post | null;
+  isRead: boolean;
+  createdAt: string;
+}
+
+export type NotificationsPage = Page<Notification>;
+
+export interface NotificationsReadPayload {
+  notificationIds?: string[];
+}
+
+export interface SuccessResponse {
+  success: boolean;
 }

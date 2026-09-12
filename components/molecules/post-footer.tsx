@@ -4,13 +4,13 @@ import { IconButton } from '@/components/molecules/icon-button';
 import { TextButton } from '@/components/molecules/text-button';
 import { env } from '@/constants/env';
 import { Spacing } from '@/constants/theme';
-import { FeedItem } from '@/services/api-types';
+import { PostDetailed } from '@/services/api-types';
 import * as Clipboard from 'expo-clipboard';
 import { ComponentProps, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 type PostFooterProps = {
-  post: FeedItem;
+  post: PostDetailed;
   isLiked: boolean;
   isReposted: boolean;
   onLikePress: () => void;
@@ -68,25 +68,30 @@ export function PostFooter({
     });
   };
 
+  const repliesCount = post.replies;
+  const repostsCount = post.reposts;
+  const quotesCount = post.quotes;
+  const likesCount = post.likes;
+
   return (
     <>
       <View style={styles.footer}>
         <PostAction
           icon="message-circle"
-          count={post.replies}
+          count={repliesCount}
           onPress={onReplyPress}
         />
         <View ref={repostButtonRef} collapsable={false}>
           <PostAction
             icon="repeat"
-            count={post.reposts + post.quotes}
+            count={repostsCount + quotesCount}
             active={isReposted}
             onPress={handleRepostButtonPress}
           />
         </View>
         <PostAction
           icon="heart"
-          count={post.likes}
+          count={likesCount}
           active={isLiked}
           onPress={onLikePress}
         />

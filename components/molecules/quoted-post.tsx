@@ -3,11 +3,11 @@ import { Text } from '@/components/atoms/text';
 import { env } from '@/constants/env';
 import { Spacing } from '@/constants/theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { FeedItemPost, Post } from '@/services/api-types';
+import { Post } from '@/services/api-types';
 import { StyleSheet, View } from 'react-native';
 
 type QuotedPostProps = {
-  post: Post | FeedItemPost;
+  post: Post;
 };
 
 export function QuotedPost({ post }: Readonly<QuotedPostProps>) {
@@ -20,17 +20,17 @@ export function QuotedPost({ post }: Readonly<QuotedPostProps>) {
     <View style={[styles.container, { borderColor }]}>
       <View style={styles.header}>
         <ProfilePhoto imageUrl={avatarUrl} size="xs" />
-        {post.profile.displayName && (
+        {Boolean(post.profile.displayName) && (
           <Text variant="body" style={styles.displayName} numberOfLines={1}>
             {post.profile.displayName}
           </Text>
         )}
-        {post.profile.username && (
+        {Boolean(post.profile.username) && (
           <Text variant="caption" colorName="muted" numberOfLines={1}>
             @{post.profile.username}
           </Text>
         )}
-        {post.createdAt && (
+        {Boolean(post.createdAt) && (
           <>
             <Text variant="caption" colorName="muted">
               ·

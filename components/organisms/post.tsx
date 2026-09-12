@@ -11,14 +11,14 @@ import {
   useUnrepostPost,
 } from '@/hooks/use-posts';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { FeedItem } from '@/services/api-types';
+import { PostDetailed } from '@/services/api-types';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Modal } from '../containers/modal';
 import { PostComposer } from './post-composer';
 
 type PostProps = {
-  post: FeedItem;
+  post: PostDetailed;
 };
 
 // TODO: Update like and repost counts when the user likes or reposts a post, instead of just toggling the state.
@@ -31,8 +31,9 @@ export function Post({ post }: Readonly<PostProps>) {
     ? `${env.STORAGE_BASE_URL}/public/${post.profile.avatarPath}`
     : undefined;
 
-  const [isLiked, setIsLiked] = useState(post.isLiked ?? false);
-  const [isReposted, setIsReposted] = useState(post.isReposted ?? false);
+  // The API does not currently report the viewer's like/repost state, so it starts unset.
+  const [isLiked, setIsLiked] = useState(false);
+  const [isReposted, setIsReposted] = useState(false);
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 
@@ -81,13 +82,13 @@ export function Post({ post }: Readonly<PostProps>) {
             {formatPostDate(post.createdAt)}
           </Text>
         </View>
-        {post.repliedPost && (
+        {!!post.repliedPost && (
           <Text variant="caption" colorName="muted">
             Replying to @{post.repliedPost.profile.username}
           </Text>
         )}
         <Text variant="body">{post.content}</Text>
-        {post.quotedPost && <QuotedPost post={post.quotedPost} />}
+        {!!post.quotedPost && <QuotedPost post={post.quotedPost} />}
         <PostFooter
           post={post}
           isLiked={isLiked}
