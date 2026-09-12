@@ -24,7 +24,11 @@ type PostProps = {
 
 // TODO: Update like and repost counts when the user likes or reposts a post, instead of just toggling the state.
 // TODO: Showing interaction counts as "10k", "1.2M", etc. instead of the exact number, when the counts are large.
-// TODO: Implement quote and share functionality for posts.
+// TODO: Show quoted post.
+// TODO: Implement quote functionality for posts.
+// TODO: Implement "See quotes" functionality for posts.
+// TODO: Implement "Copy Link" functionality for posts.
+// TODO: Implement profile links.
 export function Post({ post }: Readonly<PostProps>) {
   const borderColor = useThemeColor('border');
   const avatarUrl = post.profile.avatarPath
@@ -36,8 +40,11 @@ export function Post({ post }: Readonly<PostProps>) {
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
   const [replyContent, setReplyContent] = useState('');
   const [isSharePopoverOpen, setIsSharePopoverOpen] = useState(false);
-  const [popoverPosition, setPopoverPosition] = useState({ top: 0, left: 0 });
+  const [sharePopoverPosition, setSharePopoverPosition] = useState({ top: 0, left: 0 });
   const shareButtonRef = useRef<View>(null);
+  const [isRepostPopoverOpen, setIsRepostPopoverOpen] = useState(false);
+  const [repostPopoverPosition, setRepostPopoverPosition] = useState({ top: 0, left: 0 });
+  const repostButtonRef = useRef<View>(null);
 
   const { mutate: likePost } = useLikePost();
   const { mutate: unlikePost } = useUnlikePost();
@@ -67,6 +74,21 @@ export function Post({ post }: Readonly<PostProps>) {
     }
   };
 
+  const handleRepostButtonPress = () => {
+    if (isRepostPopoverOpen) {
+      setIsRepostPopoverOpen(false);
+      return;
+    }
+
+    repostButtonRef.current?.measureInWindow((x, y, width, height) => {
+      setRepostPopoverPosition({
+        top: y + height + Spacing.xs,
+        left: Math.max(Spacing.sm, x + width - 140),
+      });
+      setIsRepostPopoverOpen(true);
+    });
+  };
+
   const handleSharePress = () => {
     if (isSharePopoverOpen) {
       setIsSharePopoverOpen(false);
@@ -74,7 +96,7 @@ export function Post({ post }: Readonly<PostProps>) {
     }
 
     shareButtonRef.current?.measureInWindow((x, y, width, height) => {
-      setPopoverPosition({
+      setSharePopoverPosition({
         top: y + height + Spacing.xs,
         left: Math.max(Spacing.sm, x + width - 140),
       });
@@ -126,12 +148,14 @@ export function Post({ post }: Readonly<PostProps>) {
             count={post.replies}
             onPress={() => setIsReplyModalOpen(true)}
           />
-          <PostAction
-            icon="repeat"
-            count={post.reposts + post.quotes}
-            active={isReposted}
-            onPress={handleRepostPress}
-          />
+          <View ref={repostButtonRef} collapsable={false}>
+            <PostAction
+              icon="repeat"
+              count={post.reposts + post.quotes}
+              active={isReposted}
+              onPress={handleRepostButtonPress}
+            />
+          </View>
           <PostAction
             icon="heart"
             count={post.likes}
@@ -149,9 +173,44 @@ export function Post({ post }: Readonly<PostProps>) {
       </View>
 
       <Popover
+        visible={isRepostPopoverOpen}
+        onClose={() => setIsRepostPopoverOpen(false)}
+        position={repostPopoverPosition}
+      >
+        <TextButton
+          icon="repeat"
+          text={isReposted ? 'Undo repost' : 'Repost'}
+          variant="default"
+          textVariant="caption"
+          onPress={() => {
+            setIsRepostPopoverOpen(false);
+            handleRepostPress();
+          }}
+        />
+        <TextButton
+          icon="edit-3"
+          text="Quote"
+          variant="default"
+          textVariant="caption"
+          onPress={() => {
+            setIsRepostPopoverOpen(false);
+          }}
+        />
+        <TextButton
+          icon="list"
+          text="See quotes"
+          variant="default"
+          textVariant="caption"
+          onPress={() => {
+            setIsRepostPopoverOpen(false);
+          }}
+        />
+      </Popover>
+
+      <Popover
         visible={isSharePopoverOpen}
         onClose={() => setIsSharePopoverOpen(false)}
-        position={popoverPosition}
+        position={sharePopoverPosition}
       >
         <TextButton
           icon="link"
