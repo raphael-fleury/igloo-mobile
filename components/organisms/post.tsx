@@ -23,7 +23,6 @@ type PostProps = {
 
 // TODO: Update like and repost counts when the user likes or reposts a post, instead of just toggling the state.
 // TODO: Showing interaction counts as "10k", "1.2M", etc. instead of the exact number, when the counts are large.
-// TODO: Implement quote functionality for posts.
 // TODO: Implement "See quotes" functionality for posts.
 // TODO: Implement profile links.
 export function Post({ post }: Readonly<PostProps>) {
@@ -35,6 +34,7 @@ export function Post({ post }: Readonly<PostProps>) {
   const [isLiked, setIsLiked] = useState(post.isLiked ?? false);
   const [isReposted, setIsReposted] = useState(post.isReposted ?? false);
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
+  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 
   const { mutate: likePost } = useLikePost();
   const { mutate: unlikePost } = useUnlikePost();
@@ -95,6 +95,7 @@ export function Post({ post }: Readonly<PostProps>) {
           onLikePress={handleLikePress}
           onRepostPress={handleRepostPress}
           onReplyPress={() => setIsReplyModalOpen(true)}
+          onQuotePress={() => setIsQuoteModalOpen(true)}
         />
       </View>
 
@@ -105,6 +106,17 @@ export function Post({ post }: Readonly<PostProps>) {
         <PostComposer
           repliedPost={post}
           onSuccess={() => setIsReplyModalOpen(false)}
+          containerStyle={styles.composerInModal}
+        />
+      </Modal>
+
+      <Modal
+        visible={isQuoteModalOpen}
+        onClose={() => setIsQuoteModalOpen(false)}
+      >
+        <PostComposer
+          quotedPost={post}
+          onSuccess={() => setIsQuoteModalOpen(false)}
           containerStyle={styles.composerInModal}
         />
       </Modal>

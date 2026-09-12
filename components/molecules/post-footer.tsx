@@ -16,6 +16,7 @@ type PostFooterProps = {
   onLikePress: () => void;
   onRepostPress: () => void;
   onReplyPress: () => void;
+  onQuotePress: () => void;
 };
 
 export function PostFooter({
@@ -25,9 +26,10 @@ export function PostFooter({
   onLikePress,
   onRepostPress,
   onReplyPress,
+  onQuotePress,
 }: Readonly<PostFooterProps>) {
   const postUrl = `${env.WEB_BASE_URL}/posts/${post.id}`;
-  
+
   const [isSharePopoverOpen, setIsSharePopoverOpen] = useState(false);
   const [sharePopoverPosition, setSharePopoverPosition] = useState({ top: 0, left: 0 });
   const shareButtonRef = useRef<View>(null);
@@ -119,6 +121,7 @@ export function PostFooter({
           textVariant="caption"
           onPress={() => {
             setIsRepostPopoverOpen(false);
+            onQuotePress();
           }}
         />
         <TextButton
