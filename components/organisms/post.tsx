@@ -11,10 +11,11 @@ import {
 } from '@/hooks/use-posts';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { FeedItem } from '@/services/api-types';
-import { ComponentProps, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ComponentProps, useRef, useState } from 'react';
+import { Pressable, Modal as RNModal, StyleSheet, View } from 'react-native';
 import { Modal } from '../containers/modal';
 import { PostComposer } from '../molecules/post-composer';
+import { TextButton } from '../molecules/text-button';
 
 type PostProps = {
   post: FeedItem;
@@ -24,6 +25,7 @@ type PostProps = {
 // TODO: Showing interaction counts as "10k", "1.2M", etc. instead of the exact number, when the counts are large.
 // TODO: Implement quote and share functionality for posts.
 export function Post({ post }: Readonly<PostProps>) {
+  const surfaceColor = useThemeColor('surface');
   const borderColor = useThemeColor('border');
   const avatarUrl = post.profile.avatarPath
     ? `http://localhost:9000/public/${post.profile.avatarPath}`
@@ -33,6 +35,9 @@ export function Post({ post }: Readonly<PostProps>) {
   const [isReposted, setIsReposted] = useState(post.isReposted ?? false);
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
   const [replyContent, setReplyContent] = useState('');
+  const [isSharePopoverOpen, setIsSharePopoverOpen] = useState(false);
+  const [popoverPosition, setPopoverPosition] = useState({ top: 0, left: 0 });
+  const shareButtonRef = useRef<View>(null);
 
   const { mutate: likePost } = useLikePost();
   const { mutate: unlikePost } = useUnlikePost();
@@ -60,6 +65,21 @@ export function Post({ post }: Readonly<PostProps>) {
     } else {
       unrepostPost(post.id, { onError: () => setIsReposted(true) });
     }
+  };
+
+  const handleSharePress = () => {
+    if (isSharePopoverOpen) {
+      setIsSharePopoverOpen(false);
+      return;
+    }
+
+    shareButtonRef.current?.measureInWindow((x, y, width, height) => {
+      setPopoverPosition({
+        top: y + height + Spacing.xs,
+        left: Math.max(Spacing.sm, x + width - 140),
+      });
+      setIsSharePopoverOpen(true);
+    });
   };
 
   const handleReplySubmit = () => {
@@ -118,9 +138,49 @@ export function Post({ post }: Readonly<PostProps>) {
             active={isLiked}
             onPress={handleLikePress}
           />
-          <PostAction icon="share" />
+          <View ref={shareButtonRef} collapsable={false}>
+            <PostAction
+              icon="share"
+              active={isSharePopoverOpen}
+              onPress={handleSharePress}
+            />
+          </View>
         </View>
       </View>
+
+      <RNModal
+        visible={isSharePopoverOpen}
+        transparent
+        animationType="none"
+        onRequestClose={() => setIsSharePopoverOpen(false)}
+      >
+        <Pressable
+          style={StyleSheet.absoluteFill}
+          onPress={() => setIsSharePopoverOpen(false)}
+        >
+          <View
+            style={[
+              styles.popoverMenu,
+              {
+                top: popoverPosition.top,
+                left: popoverPosition.left,
+                backgroundColor: surfaceColor,
+                borderColor,
+              },
+            ]}
+          >
+            <TextButton
+              icon="link"
+              text="Copy link"
+              variant="default"
+              textVariant="caption"
+              onPress={() => {
+                setIsSharePopoverOpen(false);
+              }}
+            />
+          </View>
+        </Pressable>
+      </RNModal>
 
       <Modal
         visible={isReplyModalOpen}
@@ -193,6 +253,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.xs,
+  },
+  popoverMenu: {
+    position: 'absolute',
+    minWidth: 140,
+    borderRadius: Spacing.sm,
+    borderWidth: 1,
+    padding: Spacing.xs,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
   },
   composerInModal: {
     borderBottomWidth: 0,
