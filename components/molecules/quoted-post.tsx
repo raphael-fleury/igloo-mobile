@@ -19,7 +19,7 @@ export function QuotedPost({ post }: Readonly<QuotedPostProps>) {
   return (
     <View style={[styles.container, { borderColor }]}>
       <View style={styles.header}>
-        <ProfilePhoto imageUrl={avatarUrl} size="xs" />
+        <ProfilePhoto imageUrl={avatarUrl} size="xxs" />
         {Boolean(post.profile.displayName) && (
           <Text variant="body" style={styles.displayName} numberOfLines={1}>
             {post.profile.displayName}
