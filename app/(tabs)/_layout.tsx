@@ -5,7 +5,6 @@ import { useWindowDimensions } from 'react-native';
 import { IconName } from '@/components/atoms/icon';
 import { CustomTabBar, TabItem } from '@/components/organisms/tab-bar';
 import { SplashScreen } from '@/components/screens/splash';
-import { env } from '@/constants/env';
 import { Breakpoints } from '@/constants/theme';
 import { ActiveTabProvider } from '@/contexts/active-tab';
 import { useAuth } from '@/contexts/auth-context';
@@ -103,17 +102,6 @@ export default function TabLayout() {
             tabPress: () => setActiveTab('configurations'),
           }}
         />
-        {env.NODE_ENV === 'development' && (
-          <Tabs.Screen
-            name="development"
-            options={{
-              title: 'Development',
-            }}
-            listeners={{
-              tabPress: () => setActiveTab('development'),
-            }}
-          />
-        )}
       </Tabs>
     </ActiveTabProvider>
   );
