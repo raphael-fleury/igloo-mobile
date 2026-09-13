@@ -2,7 +2,9 @@ import { SearchBar } from "@/components/molecules/search-bar";
 import { TabItem, Tabs } from "@/components/molecules/tabs";
 import { PageLayout } from "@/components/organisms/page-layout";
 import { Spacing } from "@/constants/theme";
+import { useAuth } from "@/contexts/auth-context";
 import { useThemeColor } from "@/hooks/use-theme-color";
+import { Redirect } from "expo-router";
 import { useState } from "react";
 import { View } from "react-native";
 
@@ -13,8 +15,13 @@ const EXPLORE_TABS: TabItem[] = [
 ];
 
 export default function ExploreScreen() {
+  const { isAuthenticated } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('top');
+
+  if (!isAuthenticated) {
+    return <Redirect href="/(auth)/sign-in" />;
+  }
 
   const handleFilterPress = () => {
     console.log('Filter button pressed');

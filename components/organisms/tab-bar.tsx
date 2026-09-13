@@ -4,6 +4,7 @@ import { IconButton } from '@/components/molecules/icon-button';
 import { TextButton } from '@/components/molecules/text-button';
 import { SettingsMenu } from '@/components/organisms/settings-menu';
 import { Breakpoints, Spacing } from '@/constants/theme';
+import { useAuth } from '@/contexts/auth-context';
 import React, { useState } from 'react';
 import {
   ScrollView,
@@ -26,6 +27,7 @@ type TabBarProps = {
 };
 
 export function CustomTabBar({ primaryTabs, secondaryTabs, activeTab, onTabPress }: Readonly<TabBarProps>) {
+  const { isAuthenticated } = useAuth();
   const { width } = useWindowDimensions();
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -35,15 +37,39 @@ export function CustomTabBar({ primaryTabs, secondaryTabs, activeTab, onTabPress
 
   return (
     <Nav horizontal={isHorizontal} style={[isLargeScreen && { width: width / 4 }]}>
-      <ScrollView
-        horizontal={isHorizontal}
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={
-          isHorizontal ? styles.horizontalContent : styles.verticalContent
-        }
-      >
-        {primaryTabs.map((tab) => (
+      {isAuthenticated && <>
+        <ScrollView
+          horizontal={isHorizontal}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={
+            isHorizontal ? styles.horizontalContent : styles.verticalContent
+          }
+        >
+          {primaryTabs.map((tab) => (
+            <TabButton
+              key={tab.page}
+              tab={tab}
+              isActive={activeTab === tab.page}
+              isLarge={isLargeScreen}
+              onPress={() => {
+                onTabPress(tab.page);
+                tab.onPress?.();
+              }}
+            />
+          ))}
+
+          {isHorizontal && (
+            <IconButton
+              name="menu"
+              variant="default"
+              size="md"
+              onPress={() => setMenuVisible(true)}
+            />
+          )}
+        </ScrollView>
+
+        {!isHorizontal && secondaryTabs.map((tab) => (
           <TabButton
             key={tab.page}
             tab={tab}
@@ -57,42 +83,20 @@ export function CustomTabBar({ primaryTabs, secondaryTabs, activeTab, onTabPress
         ))}
 
         {isHorizontal && (
-          <IconButton
-            name="menu"
-            variant="default"
-            size="md"
-            onPress={() => setMenuVisible(true)}
+          <SettingsMenu
+            visible={menuVisible}
+            onClose={() => setMenuVisible(false)}
+            tabs={secondaryTabs}
+            activeTab={activeTab}
+            onTabPress={(page) => {
+              onTabPress(page);
+              setMenuVisible(false);
+              const tab = secondaryTabs.find(t => t.page === page);
+              tab?.onPress?.();
+            }}
           />
         )}
-      </ScrollView>
-
-      {!isHorizontal && secondaryTabs.map((tab) => (
-        <TabButton
-          key={tab.page}
-          tab={tab}
-          isActive={activeTab === tab.page}
-          isLarge={isLargeScreen}
-          onPress={() => {
-            onTabPress(tab.page);
-            tab.onPress?.();
-          }}
-        />
-      ))}
-
-      {isHorizontal && (
-        <SettingsMenu
-          visible={menuVisible}
-          onClose={() => setMenuVisible(false)}
-          tabs={secondaryTabs}
-          activeTab={activeTab}
-          onTabPress={(page) => {
-            onTabPress(page);
-            setMenuVisible(false);
-            const tab = secondaryTabs.find(t => t.page === page);
-            tab?.onPress?.();
-          }}
-        />
-      )}
+      </>}
     </Nav>
   )
 }

@@ -2,8 +2,10 @@ import { TabItem, Tabs } from "@/components/molecules/tabs";
 import { Feed } from "@/components/organisms/feed";
 import { PageLayout } from "@/components/organisms/page-layout";
 import { PostComposer } from "@/components/organisms/post-composer";
+import { useAuth } from "@/contexts/auth-context";
 import { Feed as FeedName } from "@/hooks/use-feeds";
 import { useThemeColor } from "@/hooks/use-theme-color";
+import { Redirect } from "expo-router";
 import { useState } from "react";
 import { View } from "react-native";
 
@@ -13,7 +15,13 @@ const HOME_TABS: TabItem[] = [
 ];
 
 export default function HomeScreen() {
+  const { isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState('following');
+  const backgroundColor = useThemeColor('background')
+
+  if (!isAuthenticated) {
+    return <Redirect href="/(auth)/sign-in" />;
+  }
 
   const sidebarSections = [
     {
@@ -38,7 +46,7 @@ export default function HomeScreen() {
     <PageLayout rightSidebarSections={sidebarSections}>
       <View
         style={{
-          backgroundColor: useThemeColor('background'),
+          backgroundColor,
           flex: 1,
         }}
       >

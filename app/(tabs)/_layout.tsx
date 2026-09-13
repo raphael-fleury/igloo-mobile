@@ -1,4 +1,4 @@
-import { Redirect, Tabs } from 'expo-router';
+import { Tabs } from 'expo-router';
 import React, { useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 
@@ -11,15 +11,11 @@ import { useAuth } from '@/contexts/auth-context';
 
 export default function TabLayout() {
   const { width } = useWindowDimensions();
-  const { logout, isAuthenticated, isLoading } = useAuth();
+  const { logout, isLoading } = useAuth();
   const [activeTab, setActiveTab] = useState('index');
 
   if (isLoading) {
     return <SplashScreen />
-  }
-
-  if (!isAuthenticated) {
-    return <Redirect href="/(auth)/sign-in" />;
   }
 
   const isMediumScreen = width >= Breakpoints.md;
