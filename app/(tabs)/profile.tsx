@@ -7,7 +7,7 @@ import { useThemeColor } from "@/hooks/use-theme-color";
 import { Redirect } from "expo-router";
 import { ActivityIndicator, View } from "react-native";
 
-export default function ProfileScreen() {
+export default function MyProfileScreen() {
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
