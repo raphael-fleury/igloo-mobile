@@ -4,20 +4,33 @@ import { env } from '@/constants/env';
 import { Spacing } from '@/constants/theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { Post } from '@/services/api-types';
-import { StyleSheet, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 type QuotedPostProps = {
   post: Post;
 };
 
 export function QuotedPost({ post }: Readonly<QuotedPostProps>) {
+  const router = useRouter();
   const borderColor = useThemeColor('border');
   const avatarUrl = post.profile.avatarPath
     ? `${env.STORAGE_BASE_URL}/public/${post.profile.avatarPath}`
     : undefined;
 
   return (
-    <View style={[styles.container, { borderColor }]}>
+    <Pressable
+      style={[styles.container, { borderColor }]}
+      accessibilityRole="link"
+      accessibilityLabel={`View quoted post by ${post.profile.displayName}`}
+      onPress={(event) => {
+        event.stopPropagation();
+        router.push({
+          pathname: '/(tabs)/posts/[id]',
+          params: { id: post.id },
+        });
+      }}
+    >
       <View style={styles.header}>
         <ProfilePhoto imageUrl={avatarUrl} size="xxs" />
         {Boolean(post.profile.displayName) && (
@@ -42,7 +55,7 @@ export function QuotedPost({ post }: Readonly<QuotedPostProps>) {
         )}
       </View>
       <Text variant="body">{post.content}</Text>
-    </View>
+    </Pressable>
   );
 }
 
