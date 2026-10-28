@@ -12,8 +12,9 @@ import {
 } from '@/hooks/use-posts';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { PostDetailed } from '@/services/api-types';
+import { usePathname, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Modal } from '../containers/modal';
 import { PostComposer } from './post-composer';
 
@@ -25,7 +26,11 @@ type PostProps = {
 // TODO: Showing interaction counts as "10k", "1.2M", etc. instead of the exact number, when the counts are large.
 // TODO: Implement "See quotes" functionality for posts.
 // TODO: Implement profile links.
+// TODO: Implement mentions.
 export function Post({ post }: Readonly<PostProps>) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const isPostDetail = pathname === `/posts/${post.id}`;
   const borderColor = useThemeColor('border');
   const avatarUrl = post.profile.avatarPath
     ? `${env.STORAGE_BASE_URL}/public/${post.profile.avatarPath}`
@@ -65,7 +70,16 @@ export function Post({ post }: Readonly<PostProps>) {
   };
 
   return (
-    <View style={[styles.container, { borderBottomColor: borderColor }]}>
+    <Pressable
+      style={[styles.container, { borderBottomColor: borderColor }]}
+      accessibilityRole={isPostDetail ? undefined : 'link'}
+      accessibilityLabel={`View post by ${post.profile.displayName}`}
+      disabled={isPostDetail}
+      onPress={() => router.push({
+        pathname: '/(tabs)/posts/[id]',
+        params: { id: post.id },
+      })}
+    >
       <ProfilePhoto imageUrl={avatarUrl} size="md" />
       <View style={styles.content}>
         <View style={styles.header}>
@@ -89,15 +103,20 @@ export function Post({ post }: Readonly<PostProps>) {
         )}
         <Text variant="body">{post.content}</Text>
         {!!post.quotedPost && <QuotedPost post={post.quotedPost} />}
-        <PostFooter
-          post={post}
-          isLiked={isLiked}
-          isReposted={isReposted}
-          onLikePress={handleLikePress}
-          onRepostPress={handleRepostPress}
-          onReplyPress={() => setIsReplyModalOpen(true)}
-          onQuotePress={() => setIsQuoteModalOpen(true)}
-        />
+        <Pressable
+          accessible={false}
+          onPress={(event) => event.stopPropagation()}
+        >
+          <PostFooter
+            post={post}
+            isLiked={isLiked}
+            isReposted={isReposted}
+            onLikePress={handleLikePress}
+            onRepostPress={handleRepostPress}
+            onReplyPress={() => setIsReplyModalOpen(true)}
+            onQuotePress={() => setIsQuoteModalOpen(true)}
+          />
+        </Pressable>
       </View>
 
       <Modal
@@ -121,7 +140,7 @@ export function Post({ post }: Readonly<PostProps>) {
           containerStyle={styles.composerInModal}
         />
       </Modal>
-    </View>
+    </Pressable>
   );
 }
 
