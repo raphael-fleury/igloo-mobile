@@ -4,7 +4,10 @@ import { Pressable, type PressableProps, type StyleProp, type ViewStyle } from '
 
 const DEFAULT_PROFILE_IMAGE = require('@/assets/images/profile-default.jpeg');
 
-type ProfilePhotoProps = Pick<PressableProps, 'onPress' | 'onHoverIn' | 'onHoverOut'> & {
+type ProfilePhotoProps = Pick<
+  PressableProps,
+  'accessibilityLabel' | 'accessibilityRole' | 'onPress' | 'onHoverIn' | 'onHoverOut'
+> & {
   imageUrl?: string | null;
   size: keyof typeof IconSize;
   style?: StyleProp<ViewStyle>;

@@ -1,5 +1,6 @@
 import { ProfilePhoto } from '@/components/atoms/profile-photo';
 import { Text } from '@/components/atoms/text';
+import { ProfileLink } from '@/components/molecules/profile-link';
 import { PostFooter } from '@/components/molecules/post-footer';
 import { QuotedPost } from '@/components/molecules/quoted-post';
 import { env } from '@/constants/env';
@@ -25,7 +26,6 @@ type PostProps = {
 // TODO: Update like and repost counts when the user likes or reposts a post, instead of just toggling the state.
 // TODO: Showing interaction counts as "10k", "1.2M", etc. instead of the exact number, when the counts are large.
 // TODO: Implement "See quotes" functionality for posts.
-// TODO: Implement profile links.
 // TODO: Implement mentions.
 export function Post({ post }: Readonly<PostProps>) {
   const router = useRouter();
@@ -80,15 +80,39 @@ export function Post({ post }: Readonly<PostProps>) {
         params: { id: post.id },
       })}
     >
-      <ProfilePhoto imageUrl={avatarUrl} size="md" />
+      <ProfilePhoto
+        imageUrl={avatarUrl}
+        size="md"
+        accessibilityRole="link"
+        accessibilityLabel={`View profile of ${post.profile.displayName}`}
+        onPress={(event) => {
+          event.stopPropagation();
+          router.push({
+            pathname: '/profiles/[id]',
+            params: { id: post.profile.id },
+          });
+        }}
+      />
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text variant="body" style={styles.displayName} numberOfLines={1}>
+          <ProfileLink
+            profile={post.profile}
+            accessibilityLabel={`View profile of ${post.profile.displayName}`}
+            variant="body"
+            style={styles.displayName}
+            numberOfLines={1}
+          >
             {post.profile.displayName}
-          </Text>
-          <Text variant="caption" colorName="muted" numberOfLines={1}>
+          </ProfileLink>
+          <ProfileLink
+            profile={post.profile}
+            accessibilityLabel={`View profile of ${post.profile.username}`}
+            variant="caption"
+            colorName="muted"
+            numberOfLines={1}
+          >
             @{post.profile.username}
-          </Text>
+          </ProfileLink>
           <Text variant="caption" colorName="muted">
             ·
           </Text>
@@ -97,9 +121,19 @@ export function Post({ post }: Readonly<PostProps>) {
           </Text>
         </View>
         {!!post.repliedPost && (
-          <Text variant="caption" colorName="muted">
-            Replying to @{post.repliedPost.profile.username}
-          </Text>
+          <View style={styles.replyingTo}>
+            <Text variant="caption" colorName="muted">
+              Replying to{' '}
+            </Text>
+            <ProfileLink
+              profile={post.repliedPost.profile}
+              accessibilityLabel={`View profile of ${post.repliedPost.profile.username}`}
+              variant="caption"
+              colorName="muted"
+            >
+              @{post.repliedPost.profile.username}
+            </ProfileLink>
+          </View>
         )}
         <Text variant="body">{post.content}</Text>
         {!!post.quotedPost && <QuotedPost post={post.quotedPost} />}
@@ -163,6 +197,10 @@ const styles = StyleSheet.create({
   displayName: {
     fontWeight: 600,
   },
+  replyingTo: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
   composerInModal: {
     borderBottomWidth: 0,
     paddingHorizontal: Spacing.sm,
@@ -199,4 +237,3 @@ function formatPostDate(dateString: string): string {
     ...(isCurrentYear ? {} : { year: 'numeric' }),
   });
 }
-
