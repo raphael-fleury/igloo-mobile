@@ -1,16 +1,30 @@
 import { Text } from '@/components/atoms/text';
+import { IconButton } from '@/components/molecules/icon-button';
 import { PageLayout } from '@/components/organisms/page-layout';
 import { Post } from '@/components/organisms/post';
+import { PostComposer } from '@/components/organisms/post-composer';
 import { Spacing } from '@/constants/theme';
+import { useAuth } from '@/contexts/auth-context';
 import { useGetPostById } from '@/hooks/use-posts';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 
 export default function PostScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
   const backgroundColor = useThemeColor('background');
   const accentColor = useThemeColor('accent');
+  const borderColor = useThemeColor('border');
+  const { isAuthenticated } = useAuth();
+
+  const handleBackPress = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/(tabs)');
+    }
+  };
 
   const { data: post, isLoading, isError } = useGetPostById(id ?? '');
 
@@ -41,6 +55,16 @@ export default function PostScreen() {
           { backgroundColor },
         ]}
       >
+        <View style={[styles.header, { borderBottomColor: borderColor }]}>
+          <IconButton
+            name="arrow-left"
+            variant="default"
+            accessibilityLabel="Go back"
+            onPress={handleBackPress}
+          />
+          <Text variant="title">Post</Text>
+        </View>
+
         {isLoading && (
           <View style={styles.centered}>
             <ActivityIndicator color={accentColor} />
@@ -58,6 +82,7 @@ export default function PostScreen() {
         {!isLoading && !isError && post && (
           <ScrollView contentContainerStyle={styles.scrollContent}>
             <Post post={post} />
+            {isAuthenticated && <PostComposer repliedPost={post} />}
           </ScrollView>
         )}
 
@@ -76,6 +101,14 @@ export default function PostScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.lg,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.sm,
+    borderBottomWidth: 1,
   },
   centered: {
     flex: 1,
