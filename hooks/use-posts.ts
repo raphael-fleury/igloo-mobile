@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../services/api-client';
 import {
   CreatePostRequest,
@@ -56,13 +56,17 @@ export const useGetPostReposts = (id: string, params?: PaginationParams) => {
   });
 };
 
-export const useGetPostReplies = (id: string, params?: PaginationParams) => {
-  return useQuery({
-    queryKey: ['post', id, 'replies', params],
-    queryFn: async () => {
-      const response = await apiClient.get<PostsPage>(`/posts/${id}/replies`, { params });
+export const useGetPostReplies = (id: string, params?: Omit<PaginationParams, 'cursor'>) => {
+  return useInfiniteQuery({
+    queryKey: ['post', id, 'replies', params?.limit],
+    queryFn: async ({ pageParam }) => {
+      const response = await apiClient.get<PostsPage>(`/posts/${id}/replies`, {
+        params: { ...params, cursor: pageParam },
+      });
       return response.data;
     },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => (lastPage.hasNextPage ? lastPage.nextCursor : undefined),
     enabled: !!id,
   });
 };
@@ -87,9 +91,14 @@ export const useCreatePost = () => {
       const response = await apiClient.post<Post>('/posts/', data);
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
       queryClient.invalidateQueries({ queryKey: ['feeds'] });
+      if (variables.repliedPostId) {
+        queryClient.invalidateQueries({
+          queryKey: ['post', variables.repliedPostId, 'replies'],
+        });
+      }
     },
   });
 };
