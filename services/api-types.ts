@@ -106,6 +106,17 @@ export interface PaginationParams {
 }
 export type PageQuery = PaginationParams;
 
+export interface FindPostsParams extends PaginationParams {
+  content?: string;
+  from?: string;
+  since?: string;
+  until?: string;
+  repliedPostId?: string;
+  quotedPostId?: string;
+  repliedProfileUsername?: string;
+  quotedProfileUsername?: string;
+}
+
 export interface Page<T> {
   hasNextPage: boolean;
   nextCursor?: string;

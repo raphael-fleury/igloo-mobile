@@ -3,6 +3,7 @@ import apiClient from '../services/api-client';
 import {
   CreatePostRequest,
   DeletedResponse,
+  FindPostsParams,
   LikesPage,
   PaginationParams,
   Post,
@@ -12,7 +13,7 @@ import {
 } from '../services/api-types';
 
 // Queries
-export const useFindPosts = (params?: PaginationParams) => {
+export const useFindPosts = (params?: FindPostsParams) => {
   return useQuery({
     queryKey: ['posts', 'list', params],
     queryFn: async () => {
