@@ -1,6 +1,7 @@
 import { PageScrollView } from '@/components/organisms/page-scroll-view';
 import { RightSidebar, SidebarSectionItem } from '@/components/organisms/right-sidebar';
 import { Breakpoints } from '@/constants/theme';
+import { useThemeColor } from '@/hooks/use-theme-color';
 import React, { ReactNode, useState } from 'react';
 import {
     Platform,
@@ -11,6 +12,7 @@ import {
 
 type PageLayoutProps = {
   children: ReactNode;
+  header?: ReactNode;
   rightSidebarSections?: {
     title: string;
     items: SidebarSectionItem[];
@@ -20,10 +22,14 @@ type PageLayoutProps = {
 
 export function PageLayout({
   children,
+  header,
   rightSidebarSections,
 }: Readonly<PageLayoutProps>) {
   const { width } = useWindowDimensions();
+  const backgroundColor = useThemeColor('background');
   const [viewport, setViewport] = useState({ width: 0, height: 0 });
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const [mainWidth, setMainWidth] = useState(0);
   const showSidebar = width >= Breakpoints.xl && rightSidebarSections;
   const sidebarWidth = showSidebar ? viewport.width / 3 : 0;
 
@@ -44,7 +50,10 @@ export function PageLayout({
           Platform.OS !== 'web' && { paddingRight: sidebarWidth },
         ]}
       >
-        <View style={styles.mainContent}>
+        <View
+          style={[styles.mainContent, { paddingTop: header ? headerHeight : 0 }]}
+          onLayout={({ nativeEvent: { layout } }) => setMainWidth(layout.width)}
+        >
           {children}
         </View>
         {showSidebar && Platform.OS === 'web' && (
@@ -64,6 +73,14 @@ export function PageLayout({
           </div>
         )}
       </PageScrollView>
+      {header && (
+        <View
+          style={[styles.header, { backgroundColor, width: mainWidth }]}
+          onLayout={({ nativeEvent: { layout } }) => setHeaderHeight(layout.height)}
+        >
+          {header}
+        </View>
+      )}
       {showSidebar && Platform.OS !== 'web' && (
         <View style={[styles.nativeSidebar, { width: sidebarWidth }]}>
           <RightSidebar sections={rightSidebarSections} />
@@ -86,6 +103,12 @@ const styles = StyleSheet.create({
   mainContent: {
     flex: 2,
     minWidth: 0,
+  },
+  header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 1,
   },
   nativeSidebar: {
     position: 'absolute',

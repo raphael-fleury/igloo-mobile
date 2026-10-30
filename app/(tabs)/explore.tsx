@@ -18,6 +18,7 @@ export default function ExploreScreen() {
   const { isAuthenticated } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('top');
+  const backgroundColor = useThemeColor('background');
 
   if (!isAuthenticated) {
     return <Redirect href="/(auth)/sign-in" />;
@@ -47,30 +48,29 @@ export default function ExploreScreen() {
   ];
 
   return (
-    <PageLayout rightSidebarSections={sidebarSections}>
-      <View
-        style={{
-          backgroundColor: useThemeColor('background'),
-          flex: 1,
-        }}
-      >
-        <SearchBar
-          placeholder="Search..."
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          onFilterPress={handleFilterPress}
-        />
-        <Tabs
-          tabs={EXPLORE_TABS}
-          activeTabId={activeTab}
-          onTabPress={setActiveTab}
-          style={{
-            paddingHorizontal: Spacing.md,
-            gap: Spacing.md,
-          }}
-        />
-        <View style={{ flex: 1 }} />
-      </View>
+    <PageLayout
+      rightSidebarSections={sidebarSections}
+      header={
+        <>
+          <SearchBar
+            placeholder="Search..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onFilterPress={handleFilterPress}
+          />
+          <Tabs
+            tabs={EXPLORE_TABS}
+            activeTabId={activeTab}
+            onTabPress={setActiveTab}
+            style={{
+              paddingHorizontal: Spacing.md,
+              gap: Spacing.md,
+            }}
+          />
+        </>
+      }
+    >
+      <View style={{ backgroundColor, flex: 1 }} />
     </PageLayout>
   );
 }

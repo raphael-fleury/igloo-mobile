@@ -43,19 +43,23 @@ export default function HomeScreen() {
   ];
 
   return (
-    <PageLayout rightSidebarSections={sidebarSections}>
-      <View
-        style={{
-          backgroundColor,
-          flex: 1,
-        }}
-      >
+    <PageLayout
+      rightSidebarSections={sidebarSections}
+      header={
         <Tabs
           tabs={HOME_TABS}
           activeTabId={activeTab}
           onTabPress={setActiveTab}
           centered
         />
+      }
+    >
+      <View
+        style={{
+          backgroundColor,
+          flex: 1,
+        }}
+      >
         <PostComposer />
         <Feed feed={activeTab as FeedName} />
       </View>

@@ -50,13 +50,9 @@ export default function PostScreen() {
   ];
 
   return (
-    <PageLayout rightSidebarSections={sidebarSections}>
-      <View
-        style={[
-          styles.container,
-          { backgroundColor },
-        ]}
-      >
+    <PageLayout
+      rightSidebarSections={sidebarSections}
+      header={
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
           <IconButton
             name="arrow-left"
@@ -66,7 +62,14 @@ export default function PostScreen() {
           />
           <Text variant="title">Post</Text>
         </View>
-
+      }
+    >
+      <View
+        style={[
+          styles.container,
+          { backgroundColor },
+        ]}
+      >
         {isLoading && (
           <View style={styles.centered}>
             <ActivityIndicator color={accentColor} />
