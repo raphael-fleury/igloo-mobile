@@ -7,8 +7,9 @@ import { useAuth } from '@/contexts/auth-context';
 import { useCreatePost } from '@/hooks/use-posts';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { PostDetailed } from '@/services/api-types';
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import {
+  Platform,
   StyleProp,
   StyleSheet,
   TextInput,
@@ -45,6 +46,21 @@ export function PostComposer({
   const minInputHeight = Typography.title.lineHeight;
   const maxInputHeight = windowHeight * 0.5;
   const [inputHeight, setInputHeight] = React.useState(minInputHeight);
+  const [inputWidth, setInputWidth] = useState(0);
+  const inputRef = useRef<TextInput>(null);
+
+  useLayoutEffect(() => {
+    if (Platform.OS !== 'web') return;
+
+    const input = inputRef.current;
+    if (!(input instanceof HTMLTextAreaElement)) return;
+
+    // scrollHeight cannot shrink below the textarea's current height.
+    input.style.height = '0px';
+    const contentHeight = input.scrollHeight;
+    input.style.height = `${Math.min(Math.max(minInputHeight, contentHeight), maxInputHeight)}px`;
+    setInputHeight(contentHeight);
+  }, [content, inputWidth, minInputHeight, maxInputHeight]);
 
   const placeholder = repliedPost
     ? `Reply to @${repliedPost.profile.username}`
@@ -80,6 +96,7 @@ export function PostComposer({
       <View style={[styles.inputWrapper, { borderBottomColor: borderColor }]}>
         <ProfilePhoto imageUrl={avatarUrl} size="md" />
         <TextInput
+          ref={inputRef}
           style={[
             styles.input,
             {
@@ -95,7 +112,12 @@ export function PostComposer({
           onChangeText={setContent}
           multiline
           scrollEnabled={inputHeight > maxInputHeight}
-          onContentSizeChange={(e) => setInputHeight(e.nativeEvent.contentSize.height)}
+          onLayout={(e) => setInputWidth(e.nativeEvent.layout.width)}
+          onContentSizeChange={
+            Platform.OS === 'web'
+              ? undefined
+              : (e) => setInputHeight(e.nativeEvent.contentSize.height)
+          }
           editable={!isPending}
         />
       </View>
