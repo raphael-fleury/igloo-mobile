@@ -2,9 +2,10 @@ import { Typography } from '@/constants/theme';
 import { ColorName } from '@/constants/theme/colors';
 import { TextVariant } from '@/constants/theme/typography';
 import { useThemeColor } from '@/hooks/use-theme-color';
+import type { DOMAttributes } from 'react';
 import { Text as RNText, TextProps, TextStyle } from 'react-native';
 
-interface Props extends TextProps {
+interface Props extends TextProps, Pick<DOMAttributes<HTMLElement>, 'onPointerEnter' | 'onPointerLeave'> {
   variant?: TextVariant;
   colorName?: ColorName;
 }
