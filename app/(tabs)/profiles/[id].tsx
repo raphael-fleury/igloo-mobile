@@ -1,6 +1,5 @@
 import { Text } from '@/components/atoms/text';
 import { PageLayout } from '@/components/organisms/page-layout';
-import { PageScrollView } from '@/components/organisms/page-scroll-view';
 import { Profile } from '@/components/organisms/profile';
 import { Spacing } from '@/constants/theme';
 import { useGetProfileById } from '@/hooks/use-profiles';
@@ -52,9 +51,7 @@ export default function ProfileScreen() {
         )}
 
         {!isLoading && !isError && profile && (
-          <PageScrollView>
-            <Profile profile={profile} />
-          </PageScrollView>
+          <Profile profile={profile} />
         )}
 
         {!isLoading && !isError && !profile && (

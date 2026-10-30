@@ -1,6 +1,5 @@
 import { Text } from "@/components/atoms/text";
 import { PageLayout } from "@/components/organisms/page-layout";
-import { PageScrollView } from "@/components/organisms/page-scroll-view";
 import { Profile } from "@/components/organisms/profile";
 import { useAuth } from "@/contexts/auth-context";
 import { useGetCurrentProfile } from "@/hooks/use-current-profile";
@@ -46,9 +45,7 @@ function ProfileContent() {
     <PageLayout rightSidebarSections={sidebarSections}>
       <View style={{ backgroundColor, flex: 1 }}>
         {profile ? (
-          <PageScrollView>
-            <Profile profile={profile} />
-          </PageScrollView>
+          <Profile profile={profile} />
         ) : (
           <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             {isLoading && <ActivityIndicator color={accentColor} />}

@@ -1,7 +1,6 @@
 import { TabItem, Tabs } from "@/components/molecules/tabs";
 import { Feed } from "@/components/organisms/feed";
 import { PageLayout } from "@/components/organisms/page-layout";
-import { PageScrollView } from "@/components/organisms/page-scroll-view";
 import { PostComposer } from "@/components/organisms/post-composer";
 import { useAuth } from "@/contexts/auth-context";
 import { Feed as FeedName } from "@/hooks/use-feeds";
@@ -51,16 +50,14 @@ export default function HomeScreen() {
           flex: 1,
         }}
       >
-        <PageScrollView>
-          <Tabs
-            tabs={HOME_TABS}
-            activeTabId={activeTab}
-            onTabPress={setActiveTab}
-            centered
-          />
-          <PostComposer />
-          <Feed feed={activeTab as FeedName} />
-        </PageScrollView>
+        <Tabs
+          tabs={HOME_TABS}
+          activeTabId={activeTab}
+          onTabPress={setActiveTab}
+          centered
+        />
+        <PostComposer />
+        <Feed feed={activeTab as FeedName} />
       </View>
     </PageLayout>
   );

@@ -1,7 +1,6 @@
 import { Text } from '@/components/atoms/text';
 import { IconButton } from '@/components/molecules/icon-button';
 import { PageLayout } from '@/components/organisms/page-layout';
-import { PageScrollView } from '@/components/organisms/page-scroll-view';
 import { Post } from '@/components/organisms/post';
 import { PostComposer } from '@/components/organisms/post-composer';
 import { PostList } from '@/components/organisms/post-list';
@@ -52,7 +51,7 @@ export default function PostScreen() {
 
   return (
     <PageLayout rightSidebarSections={sidebarSections}>
-      <PageScrollView
+      <View
         style={[
           styles.container,
           { backgroundColor },
@@ -104,7 +103,7 @@ export default function PostScreen() {
             </Text>
           </View>
         )}
-      </PageScrollView>
+      </View>
     </PageLayout>
   );
 }
