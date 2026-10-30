@@ -5,7 +5,7 @@ import { Spacing } from '@/constants/theme';
 import { useGetProfileById } from '@/hooks/use-profiles';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { useLocalSearchParams } from 'expo-router';
-import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 // TODO: Get profile by username
 export default function ProfileScreen() {
@@ -51,9 +51,7 @@ export default function ProfileScreen() {
         )}
 
         {!isLoading && !isError && profile && (
-          <ScrollView contentContainerStyle={styles.scrollContent}>
-            <Profile profile={profile} />
-          </ScrollView>
+          <Profile profile={profile} />
         )}
 
         {!isLoading && !isError && !profile && (
@@ -77,8 +75,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: Spacing.xl,
-  },
-  scrollContent: {
-    flexGrow: 1,
   },
 });
