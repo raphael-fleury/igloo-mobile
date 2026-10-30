@@ -1,4 +1,5 @@
 import { Text } from '@/components/atoms/text';
+import { PageHeader } from '@/components/molecules/page-header';
 import { PageLayout } from '@/components/organisms/page-layout';
 import { Profile } from '@/components/organisms/profile';
 import { Spacing } from '@/constants/theme';
@@ -34,7 +35,10 @@ export default function ProfileScreen() {
   ];
 
   return (
-    <PageLayout rightSidebarSections={sidebarSections}>
+    <PageLayout
+      rightSidebarSections={sidebarSections}
+      header={<PageHeader title={profile?.displayName?.trim() || 'Profile'} />}
+    >
       <View style={[styles.container, { backgroundColor }]}>
         {isLoading && (
           <View style={styles.centered}>

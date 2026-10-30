@@ -1,4 +1,5 @@
 import { Text } from "@/components/atoms/text";
+import { PageHeader } from "@/components/molecules/page-header";
 import { PageLayout } from "@/components/organisms/page-layout";
 import { Profile } from "@/components/organisms/profile";
 import { useAuth } from "@/contexts/auth-context";
@@ -42,7 +43,10 @@ function ProfileContent() {
   ];
 
   return (
-    <PageLayout rightSidebarSections={sidebarSections}>
+    <PageLayout
+      rightSidebarSections={sidebarSections}
+      header={<PageHeader title={profile?.displayName?.trim() || 'Profile'} />}
+    >
       <View style={{ backgroundColor, flex: 1 }}>
         {profile ? (
           <Profile profile={profile} />

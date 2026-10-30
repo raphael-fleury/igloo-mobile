@@ -1,5 +1,5 @@
 import { Text } from '@/components/atoms/text';
-import { IconButton } from '@/components/molecules/icon-button';
+import { PageHeader } from '@/components/molecules/page-header';
 import { PageLayout } from '@/components/organisms/page-layout';
 import { Post } from '@/components/organisms/post';
 import { PostComposer } from '@/components/organisms/post-composer';
@@ -8,24 +8,14 @@ import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/contexts/auth-context';
 import { useGetPostById, useGetPostReplies } from '@/hooks/use-posts';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 export default function PostScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const router = useRouter();
   const backgroundColor = useThemeColor('background');
   const accentColor = useThemeColor('accent');
-  const borderColor = useThemeColor('border');
   const { isAuthenticated } = useAuth();
-
-  const handleBackPress = () => {
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.replace('/(tabs)');
-    }
-  };
 
   const { data: post, isLoading, isError } = useGetPostById(id ?? '');
   const repliesQuery = useGetPostReplies(id ?? '');
@@ -52,17 +42,7 @@ export default function PostScreen() {
   return (
     <PageLayout
       rightSidebarSections={sidebarSections}
-      header={
-        <View style={[styles.header, { borderBottomColor: borderColor }]}>
-          <IconButton
-            name="arrow-left"
-            variant="default"
-            accessibilityLabel="Go back"
-            onPress={handleBackPress}
-          />
-          <Text variant="title">Post</Text>
-        </View>
-      }
+      header={<PageHeader title="Post" />}
     >
       <View
         style={[
@@ -114,14 +94,6 @@ export default function PostScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.lg,
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.sm,
-    borderBottomWidth: 1,
   },
   centered: {
     flex: 1,
