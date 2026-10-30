@@ -23,6 +23,21 @@ export const useFindPosts = (params?: FindPostsParams) => {
   });
 };
 
+export const useGetProfilePosts = (username: string) => {
+  return useInfiniteQuery({
+    queryKey: ['posts', 'profile', username],
+    queryFn: async ({ pageParam }) => {
+      const response = await apiClient.get<PostsPage>('/posts/', {
+        params: { from: username, cursor: pageParam },
+      });
+      return response.data;
+    },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => (lastPage.hasNextPage ? lastPage.nextCursor : undefined),
+    enabled: !!username,
+  });
+};
+
 export const useGetPostById = (id: string) => {
   return useQuery({
     queryKey: ['post', id],
