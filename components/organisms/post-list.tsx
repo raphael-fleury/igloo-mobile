@@ -1,12 +1,13 @@
 import { Text } from '@/components/atoms/text';
 import { Post } from '@/components/organisms/post';
+import { usePageScrollPagination } from '@/components/organisms/page-scroll-view';
 import { Spacing } from '@/constants/theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import type { PostsPage } from '@/services/api-types';
 import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import type { ReactElement } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 type PostListQuery = Pick<
   UseInfiniteQueryResult<InfiniteData<PostsPage>>,
@@ -53,10 +54,11 @@ export function PostList({
     [data]
   );
   const handleEndReached = useCallback(() => {
-    if (hasNextPage && !isFetching) {
-      fetchNextPage();
+    if (hasNextPage && !isFetching && !isError) {
+      fetchNextPage({ cancelRefetch: false });
     }
-  }, [fetchNextPage, hasNextPage, isFetching]);
+  }, [fetchNextPage, hasNextPage, isFetching, isError]);
+  usePageScrollPagination(handleEndReached, refetch, isRefetching);
 
   if (isLoading && !header) {
     return (
@@ -67,12 +69,10 @@ export function PostList({
   }
 
   return (
-    <FlatList
-      data={posts}
-      keyExtractor={(post) => post.id}
-      renderItem={({ item }) => <Post post={item} />}
-      ListHeaderComponent={header}
-      ListEmptyComponent={
+    <View>
+      {header}
+      {posts.map((post) => <Post key={post.id} post={post} />)}
+      {posts.length === 0 && (
         isLoading ? (
           <ActivityIndicator style={styles.status} color={accentColor} />
         ) : (
@@ -82,23 +82,17 @@ export function PostList({
             </Text>
           </View>
         )
-      }
-      ListFooterComponent={
-        isFetchingNextPage ? (
-          <ActivityIndicator style={styles.footer} color={accentColor} />
-        ) : isError && posts.length > 0 ? (
-          <View style={styles.status}>
-            <Text variant="body" colorName="muted">
-              {loadMoreErrorMessage}
-            </Text>
-          </View>
-        ) : null
-      }
-      onEndReached={handleEndReached}
-      onEndReachedThreshold={0.5}
-      onRefresh={refetch}
-      refreshing={isRefetching}
-    />
+      )}
+      {isFetchingNextPage ? (
+        <ActivityIndicator style={styles.footer} color={accentColor} />
+      ) : isError && posts.length > 0 ? (
+        <View style={styles.status}>
+          <Text variant="body" colorName="muted">
+            {loadMoreErrorMessage}
+          </Text>
+        </View>
+      ) : null}
+    </View>
   );
 }
 
